@@ -2,6 +2,7 @@ package database
 
 import (
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 func Connect(connectionString string) (*sqlx.DB, error) {
