@@ -1,37 +1,59 @@
 package main
 
 import (
+	"fmt"
+	"log"
+	"os"
+	"ruta-destino/pkg/database"
+	"ruta-destino/pkg/database/models"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
-	app := fiber.New()
+	conn, ok := os.LookupEnv("CONNECTION_STRING")
+	if !ok {
+		log.Fatal("CONNECTION_STRING no está definida")
+	}
+	fmt.Println(conn)
 
-	routes := map[string][]string{
-		"santa_rita": {
-			"09:55 - Valroa - Santa Bárbara",
-			"10:30 - Valroa - Santa Bárbara",
-			"13:10 - NCN - Santa Bárbara",
-		},
-		"isla_jacob": {
-			"11:10 - Aránguiz - Santa Bárbara",
-		},
+	// TODO: encontrar una forma de comprobar esto desde Docker
+	time.Sleep(time.Second * 4)
+	db, err := database.Connect(conn)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Bienvenido a ruta destino.")
+	app := fiber.New()
+
+	// TODO: mover esto a un nuevo paquete
+	type RegionSerializer struct {
+		Id     uint   `json:"id"`
+		Nombre string `json:"nombre"`
+	}
+
+	// TODO: mover a un nuevo paquete
+	app.Get("/region", func(c *fiber.Ctx) error {
+		r := models.Region{}
+		regiones := r.List(db)
+		return c.JSON(regiones)
 	})
 
-	app.Get("/routes/", func(c *fiber.Ctx) error {
-		return c.JSON(routes)
-	})
-
-	app.Get("/routes/:nombre", func(c *fiber.Ctx) error {
-		nombre := c.Params("nombre")
-		if nombre == "" {
-			return c.JSON(map[string][]string{})
+	app.Post("/region", func(c *fiber.Ctx) error {
+		region := RegionSerializer{}
+		err := c.BodyParser(&region)
+		if err != nil {
+			c.Status(400)
+			return c.SendString("Error al agregar la región")
 		}
-		return c.JSON(routes[nombre])
+		r := models.Region{Nombre: region.Nombre}
+		err = r.Insert(db)
+		if err != nil {
+			c.Status(400)
+			return c.SendString("Error al agregar la región")
+		}
+		return c.JSON(r)
 	})
 
 	app.Listen(":3000")
