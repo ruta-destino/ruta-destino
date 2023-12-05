@@ -10,10 +10,13 @@ type Region struct {
 	Numero uint   `db:"numero"`
 }
 
-func (r *Region) List(db *sqlx.DB) []Region {
+func (r *Region) List(db *sqlx.DB) ([]Region, error) {
 	regiones := []Region{}
-	db.Select(&regiones, "SELECT * FROM region")
-	return regiones
+	err := db.Select(&regiones, "SELECT * FROM region")
+	if err != nil {
+		return nil, err
+	}
+	return regiones, nil
 }
 
 func (r *Region) Insert(db *sqlx.DB) error {
