@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"ruta-destino/pkg/database"
 	"ruta-destino/pkg/database/models"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -16,11 +14,8 @@ func main() {
 	if !ok {
 		log.Fatal("CONNECTION_STRING no está definida")
 	}
-	fmt.Println(conn)
 
-	// TODO: encontrar una forma de comprobar esto desde Docker
-	time.Sleep(time.Second * 4)
-	db, err := database.Connect(conn)
+	db, err := database.Open(conn)
 	if err != nil {
 		log.Fatal(err)
 	}
