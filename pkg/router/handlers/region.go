@@ -4,6 +4,7 @@ import (
 	"ruta-destino/pkg/database"
 	"ruta-destino/pkg/database/models"
 	"ruta-destino/pkg/router/serializers"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -42,4 +43,48 @@ func (r *Region) Insert(c *fiber.Ctx) error {
 		})
 	}
 	return c.JSON(serializer)
+}
+
+func (r *Region) Update(c *fiber.Ctx) error {
+	serializer := serializers.Region{}
+	err := c.BodyParser(&serializer)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't parse request body",
+		})
+	}
+	idParam := c.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 0)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid id, not a number",
+		})
+	}
+	serializer.Id = uint(id)
+	model := models.Region(serializer)
+	err = model.Update(database.Db)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't update region entry",
+		})
+	}
+	return c.JSON(serializer)
+}
+
+func (r *Region) Delete(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 0)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid id, not a number",
+		})
+	}
+	model := models.Region{Id: uint(id)}
+	err = model.Delete(database.Db)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't delete region entry",
+		})
+	}
+	return c.Status(204).JSON(fiber.Map{})
 }
