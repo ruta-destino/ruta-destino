@@ -10,4 +10,5 @@ import (
 func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api", logger.New())
 	routes.SetupRegionRoutes(api)
+	routes.SetupProvinciaRoutes(api)
 }
