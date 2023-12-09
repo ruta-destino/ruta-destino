@@ -20,7 +20,8 @@ func (r *Region) List(db *sqlx.DB) ([]Region, error) {
 }
 
 func (r *Region) Insert(db *sqlx.DB) error {
-	_, err := db.Exec("INSERT INTO region (nombre, numero) VALUES ($1, $2)", r.Nombre, r.Numero)
+	result := db.QueryRow("INSERT INTO region (nombre, numero) VALUES ($1, $2) RETURNING id", r.Nombre, r.Numero)
+	err := result.Scan(&r.Id)
 	if err != nil {
 		return err
 	}

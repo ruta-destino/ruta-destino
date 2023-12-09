@@ -42,6 +42,7 @@ func (r *Region) Insert(c *fiber.Ctx) error {
 			"error": "Couldn't insert `region`",
 		})
 	}
+	serializer.Id = model.Id
 	return c.JSON(serializer)
 }
 
