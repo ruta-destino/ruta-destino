@@ -18,6 +18,15 @@ func (e *Empresa) List(db *sqlx.DB) ([]Empresa, error) {
 	return empresas, nil
 }
 
+func (e *Empresa) Get(db *sqlx.DB) (*Empresa, error) {
+	empresa := Empresa{}
+	err := db.Get(&empresa, "SELECT * FROM empresa WHERE id = $1", e.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &empresa, nil
+}
+
 func (e *Empresa) Insert(db *sqlx.DB) error {
 	result := db.QueryRow("INSERT INTO empresa (nombre) VALUES ($1) RETURNING id", e.Nombre)
 	err := result.Scan(&e.Id)

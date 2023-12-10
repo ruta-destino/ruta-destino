@@ -27,6 +27,24 @@ func (*Empresa) List(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
+func (*Empresa) Get(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 0)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid id, not a number",
+		})
+	}
+	model := models.Empresa{Id: uint(id)}
+	empresa, err := model.Get(database.Db)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't get empresa entry",
+		})
+	}
+	serializer := serializers.Empresa(*empresa)
+	return c.JSON(serializer)
+}
 func (*Empresa) Insert(c *fiber.Ctx) error {
 	serializer := serializers.Empresa{}
 	err := c.BodyParser(&serializer)
