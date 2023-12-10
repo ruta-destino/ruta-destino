@@ -25,6 +25,19 @@ func (t *Terminal) List(db *sqlx.DB) ([]Terminal, error) {
 	return terminales, nil
 }
 
+func (t *Terminal) Get(db *sqlx.DB) (*Terminal, error) {
+	terminal := Terminal{}
+	err := db.Get(&terminal, `
+		SELECT *
+		FROM terminal
+		WHERE id = $1
+	`, t.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &terminal, nil
+}
+
 func (t *Terminal) Insert(db *sqlx.DB) error {
 	result := db.QueryRow(`
 		INSERT INTO terminal (nombre, longitud, latitud, direccion, id_ciudad)
@@ -59,4 +72,19 @@ func (t *Terminal) Delete(db *sqlx.DB) error {
 		return err
 	}
 	return nil
+}
+
+func (t *Terminal) ListEmpresa(db *sqlx.DB) ([]Empresa, error) {
+	empresas := []Empresa{}
+	err := db.Select(&empresas, `
+		SELECT empresa.*
+		FROM empresa
+		INNER JOIN empresa_terminal
+		ON empresa.id = empresa_terminal.id_empresa
+		WHERE empresa_terminal.id_terminal = $1
+	`, t.Id)
+	if err != nil {
+		return nil, err
+	}
+	return empresas, nil
 }

@@ -14,4 +14,6 @@ func SetupTerminalRoutes(router fiber.Router) {
 	group.Post("/", terminal.Insert)
 	group.Post("/:id", terminal.Update)
 	group.Delete("/:id", terminal.Delete)
+	group.Get("/:id", terminal.Get)
+	group.Get("/:id/empresa", terminal.ListEmpresa)
 }

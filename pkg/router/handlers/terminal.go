@@ -27,6 +27,25 @@ func (*Terminal) List(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
+func (*Terminal) Get(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 0)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid id, not a number",
+		})
+	}
+	model := models.Terminal{Id: uint(id)}
+	terminal, err := model.Get(database.Db)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't get terminal entry",
+		})
+	}
+	serializer := serializers.Terminal(*terminal)
+	return c.JSON(serializer)
+}
+
 func (*Terminal) Insert(c *fiber.Ctx) error {
 	serializer := serializers.Terminal{}
 	err := c.BodyParser(&serializer)
@@ -88,4 +107,27 @@ func (*Terminal) Delete(c *fiber.Ctx) error {
 		})
 	}
 	return c.Status(204).JSON(fiber.Map{})
+}
+
+func (*Terminal) ListEmpresa(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 0)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid id, not a number",
+		})
+	}
+	model := models.Terminal{Id: uint(id)}
+	empresas, err := model.ListEmpresa(database.Db)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't get empresa entries from db",
+		})
+	}
+	serializer := []serializers.Empresa{}
+	for _, e := range empresas {
+		s := serializers.Empresa(e)
+		serializer = append(serializer, s)
+	}
+	return c.JSON(serializer)
 }
