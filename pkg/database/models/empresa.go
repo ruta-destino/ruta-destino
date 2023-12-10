@@ -66,3 +66,25 @@ func (e *Empresa) ListTerminales(db *sqlx.DB) ([]Terminal, error) {
 	}
 	return terminales, nil
 }
+
+func (e *Empresa) LinkTerminal(db *sqlx.DB, idTerminal uint) error {
+	_, err := db.Exec(`
+		INSERT INTO empresa_terminal (id_empresa, id_terminal)
+		VALUES ($1, $2)
+	`, e.Id, idTerminal)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (e *Empresa) UnlinkTerminal(db *sqlx.DB, idTerminal uint) error {
+	_, err := db.Exec(`
+		DELETE FROM empresa_terminal
+		WHERE id_empresa = $1 AND id_terminal = $2
+	`, e.Id, idTerminal)
+	if err != nil {
+		return err
+	}
+	return nil
+}

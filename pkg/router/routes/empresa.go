@@ -16,4 +16,6 @@ func SetupEmpresaRoutes(router fiber.Router) {
 	group.Delete("/:id", empresa.Delete)
 	group.Get("/:id", empresa.Get)
 	group.Get("/:id/terminal", empresa.ListTerminales)
+	group.Post("/:id/terminal", empresa.LinkTerminal)
+	group.Delete("/:id/terminal", empresa.UnlinkTerminal)
 }

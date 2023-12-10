@@ -131,3 +131,53 @@ func (*Empresa) ListTerminales(c *fiber.Ctx) error {
 	}
 	return c.JSON(serializer)
 }
+
+func (*Empresa) LinkTerminal(c *fiber.Ctx) error {
+	serializer := serializers.EmpresaLinkTerminal{}
+	err := c.BodyParser(&serializer)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't parse request body",
+		})
+	}
+	idParam := c.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 0)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid id, not a number",
+		})
+	}
+	model := models.Empresa{Id: uint(id)}
+	err = model.LinkTerminal(database.Db, serializer.Id)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't link to terminal",
+		})
+	}
+	return c.JSON(fiber.Map{})
+}
+
+func (*Empresa) UnlinkTerminal(c *fiber.Ctx) error {
+	serializer := serializers.EmpresaLinkTerminal{}
+	err := c.BodyParser(&serializer)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't parse request body",
+		})
+	}
+	idParam := c.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 0)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid id, not a number",
+		})
+	}
+	model := models.Empresa{Id: uint(id)}
+	err = model.UnlinkTerminal(database.Db, serializer.Id)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't unlink from terminal",
+		})
+	}
+	return c.Status(204).JSON(fiber.Map{})
+}
