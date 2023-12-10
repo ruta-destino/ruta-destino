@@ -42,6 +42,7 @@ func (p *Provincia) Insert(c *fiber.Ctx) error {
 			"error": "Couldn't insert `provincia`",
 		})
 	}
+	serializer.Id = model.Id
 	return c.JSON(serializer)
 }
 
