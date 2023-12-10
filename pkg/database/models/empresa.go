@@ -51,3 +51,18 @@ func (e *Empresa) Delete(db *sqlx.DB) error {
 	}
 	return nil
 }
+
+func (e *Empresa) ListTerminales(db *sqlx.DB) ([]Terminal, error) {
+	terminales := []Terminal{}
+	err := db.Select(&terminales, `
+		SELECT terminal.*
+		FROM terminal
+		INNER JOIN empresa_terminal
+		ON terminal.id = empresa_terminal.id_terminal
+		WHERE empresa_terminal.id_empresa = $1
+	`, e.Id)
+	if err != nil {
+		return nil, err
+	}
+	return terminales, nil
+}
