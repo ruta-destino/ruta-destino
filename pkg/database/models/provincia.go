@@ -12,7 +12,10 @@ type Provincia struct {
 
 func (p *Provincia) List(db *sqlx.DB) ([]Provincia, error) {
 	provincias := []Provincia{}
-	err := db.Select(&provincias, "SELECT * FROM provincia")
+	err := db.Select(&provincias, `
+		SELECT *
+		FROM provincia
+	`)
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +23,11 @@ func (p *Provincia) List(db *sqlx.DB) ([]Provincia, error) {
 }
 
 func (p *Provincia) Insert(db *sqlx.DB) error {
-	result := db.QueryRow("INSERT INTO provincia (nombre, id_region) VALUES ($1, $2) RETURNING id", p.Nombre, p.IdRegion)
+	result := db.QueryRow(`
+		INSERT INTO provincia (nombre, id_region)
+		VALUES ($1, $2)
+		RETURNING id
+	`, p.Nombre, p.IdRegion)
 	err := result.Scan(&p.Id)
 	if err != nil {
 		return err
@@ -29,7 +36,11 @@ func (p *Provincia) Insert(db *sqlx.DB) error {
 }
 
 func (p *Provincia) Update(db *sqlx.DB) error {
-	_, err := db.Exec("UPDATE provincia SET nombre = $1, id_region = $2 WHERE id = $3", p.Nombre, p.IdRegion, p.Id)
+	_, err := db.Exec(`
+		UPDATE provincia
+		SET nombre = $1, id_region = $2
+		WHERE id = $3
+	`, p.Nombre, p.IdRegion, p.Id)
 	if err != nil {
 		return err
 	}
@@ -37,7 +48,10 @@ func (p *Provincia) Update(db *sqlx.DB) error {
 }
 
 func (p *Provincia) Delete(db *sqlx.DB) error {
-	_, err := db.Exec("DELETE FROM provincia WHERE id = $1", p.Id)
+	_, err := db.Exec(`
+		DELETE FROM provincia
+		WHERE id = $1
+	`, p.Id)
 	if err != nil {
 		return err
 	}

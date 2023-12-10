@@ -20,8 +20,8 @@ func (*Provincia) List(c *fiber.Ctx) error {
 		})
 	}
 	serializer := []serializers.Provincia{}
-	for _, r := range provincias {
-		s := serializers.Provincia(r)
+	for _, p := range provincias {
+		s := serializers.Provincia(p)
 		serializer = append(serializer, s)
 	}
 	return c.JSON(serializer)

@@ -12,7 +12,10 @@ type Region struct {
 
 func (r *Region) List(db *sqlx.DB) ([]Region, error) {
 	regiones := []Region{}
-	err := db.Select(&regiones, "SELECT * FROM region")
+	err := db.Select(&regiones, `
+		SELECT *
+		FROM region
+	`)
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +23,11 @@ func (r *Region) List(db *sqlx.DB) ([]Region, error) {
 }
 
 func (r *Region) Insert(db *sqlx.DB) error {
-	result := db.QueryRow("INSERT INTO region (nombre, numero) VALUES ($1, $2) RETURNING id", r.Nombre, r.Numero)
+	result := db.QueryRow(`
+		INSERT INTO region (nombre, numero)
+		VALUES ($1, $2)
+		RETURNING id
+	`, r.Nombre, r.Numero)
 	err := result.Scan(&r.Id)
 	if err != nil {
 		return err
@@ -29,7 +36,11 @@ func (r *Region) Insert(db *sqlx.DB) error {
 }
 
 func (r *Region) Update(db *sqlx.DB) error {
-	_, err := db.Exec("UPDATE region SET nombre = $1, numero = $2 WHERE id = $3", r.Nombre, r.Numero, r.Id)
+	_, err := db.Exec(`
+		UPDATE region
+		SET nombre = $1, numero = $2
+		WHERE id = $3
+	`, r.Nombre, r.Numero, r.Id)
 	if err != nil {
 		return err
 	}
@@ -37,7 +48,10 @@ func (r *Region) Update(db *sqlx.DB) error {
 }
 
 func (r *Region) Delete(db *sqlx.DB) error {
-	_, err := db.Exec("DELETE FROM region WHERE id = $1", r.Id)
+	_, err := db.Exec(`
+		DELETE FROM region
+		WHERE id = $1
+	`, r.Id)
 	if err != nil {
 		return err
 	}

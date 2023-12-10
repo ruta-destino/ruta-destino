@@ -20,8 +20,8 @@ func (*Empresa) List(c *fiber.Ctx) error {
 		})
 	}
 	serializer := []serializers.Empresa{}
-	for _, r := range empresas {
-		s := serializers.Empresa(r)
+	for _, e := range empresas {
+		s := serializers.Empresa(e)
 		serializer = append(serializer, s)
 	}
 	return c.JSON(serializer)

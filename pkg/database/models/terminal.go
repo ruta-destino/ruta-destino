@@ -15,7 +15,10 @@ type Terminal struct {
 
 func (t *Terminal) List(db *sqlx.DB) ([]Terminal, error) {
 	terminales := []Terminal{}
-	err := db.Select(&terminales, "SELECT * FROM terminal")
+	err := db.Select(&terminales, `
+		SELECT *
+		FROM terminal
+	`)
 	if err != nil {
 		return nil, err
 	}
@@ -38,8 +41,7 @@ func (t *Terminal) Insert(db *sqlx.DB) error {
 func (t *Terminal) Update(db *sqlx.DB) error {
 	_, err := db.Exec(`
 		UPDATE terminal
-		SET
-			nombre = $1, longitud = $2, latitud = $3, direccion = $4, id_ciudad = $5
+		SET nombre = $1, longitud = $2, latitud = $3, direccion = $4, id_ciudad = $5
 		WHERE id = $6
 	`, t.Nombre, t.Longitud, t.Latitud, t.Direccion, t.IdCiudad, t.Id)
 	if err != nil {
@@ -49,7 +51,10 @@ func (t *Terminal) Update(db *sqlx.DB) error {
 }
 
 func (t *Terminal) Delete(db *sqlx.DB) error {
-	_, err := db.Exec("DELETE FROM terminal WHERE id = $1", t.Id)
+	_, err := db.Exec(`
+		DELETE FROM terminal
+		WHERE id = $1
+	`, t.Id)
 	if err != nil {
 		return err
 	}

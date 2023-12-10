@@ -11,7 +11,10 @@ type Empresa struct {
 
 func (e *Empresa) List(db *sqlx.DB) ([]Empresa, error) {
 	empresas := []Empresa{}
-	err := db.Select(&empresas, "SELECT * FROM empresa")
+	err := db.Select(&empresas, `
+		SELECT *
+		FROM empresa
+	`)
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +23,11 @@ func (e *Empresa) List(db *sqlx.DB) ([]Empresa, error) {
 
 func (e *Empresa) Get(db *sqlx.DB) (*Empresa, error) {
 	empresa := Empresa{}
-	err := db.Get(&empresa, "SELECT * FROM empresa WHERE id = $1", e.Id)
+	err := db.Get(&empresa, `
+		SELECT *
+		FROM empresa
+		WHERE id = $1
+	`, e.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +35,11 @@ func (e *Empresa) Get(db *sqlx.DB) (*Empresa, error) {
 }
 
 func (e *Empresa) Insert(db *sqlx.DB) error {
-	result := db.QueryRow("INSERT INTO empresa (nombre) VALUES ($1) RETURNING id", e.Nombre)
+	result := db.QueryRow(`
+		INSERT INTO empresa (nombre)
+		VALUES ($1)
+		RETURNING id
+	`, e.Nombre)
 	err := result.Scan(&e.Id)
 	if err != nil {
 		return err
@@ -37,7 +48,11 @@ func (e *Empresa) Insert(db *sqlx.DB) error {
 }
 
 func (e *Empresa) Update(db *sqlx.DB) error {
-	_, err := db.Exec("UPDATE empresa SET nombre = $1 WHERE id = $2", e.Nombre, e.Id)
+	_, err := db.Exec(`
+		UPDATE empresa
+		SET nombre = $1
+		WHERE id = $2
+	`, e.Nombre, e.Id)
 	if err != nil {
 		return err
 	}
@@ -45,7 +60,10 @@ func (e *Empresa) Update(db *sqlx.DB) error {
 }
 
 func (e *Empresa) Delete(db *sqlx.DB) error {
-	_, err := db.Exec("DELETE FROM empresa WHERE id = $1", e.Id)
+	_, err := db.Exec(`
+		DELETE FROM empresa
+		WHERE id = $1
+	`, e.Id)
 	if err != nil {
 		return err
 	}

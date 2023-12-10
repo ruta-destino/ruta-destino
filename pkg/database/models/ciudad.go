@@ -12,7 +12,9 @@ type Ciudad struct {
 
 func (c *Ciudad) List(db *sqlx.DB) ([]Ciudad, error) {
 	ciudades := []Ciudad{}
-	err := db.Select(&ciudades, "SELECT * FROM ciudad")
+	err := db.Select(&ciudades, `
+		SELECT * FROM ciudad
+	`)
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +22,10 @@ func (c *Ciudad) List(db *sqlx.DB) ([]Ciudad, error) {
 }
 
 func (c *Ciudad) Insert(db *sqlx.DB) error {
-	result := db.QueryRow("INSERT INTO ciudad (nombre, id_provincia) VALUES ($1, $2) RETURNING id", c.Nombre, c.IdProvincia)
+	result := db.QueryRow(`
+		INSERT INTO ciudad (nombre, id_provincia)
+		VALUES ($1, $2) RETURNING id
+	`, c.Nombre, c.IdProvincia)
 	err := result.Scan(&c.Id)
 	if err != nil {
 		return err
@@ -29,7 +34,11 @@ func (c *Ciudad) Insert(db *sqlx.DB) error {
 }
 
 func (c *Ciudad) Update(db *sqlx.DB) error {
-	_, err := db.Exec("UPDATE ciudad SET nombre = $1, id_provincia = $2 WHERE id = $3", c.Nombre, c.IdProvincia, c.Id)
+	_, err := db.Exec(`
+		UPDATE ciudad
+		SET nombre = $1, id_provincia = $2
+		WHERE id = $3
+	`, c.Nombre, c.IdProvincia, c.Id)
 	if err != nil {
 		return err
 	}
@@ -37,7 +46,10 @@ func (c *Ciudad) Update(db *sqlx.DB) error {
 }
 
 func (c *Ciudad) Delete(db *sqlx.DB) error {
-	_, err := db.Exec("DELETE FROM ciudad WHERE id = $1", c.Id)
+	_, err := db.Exec(`
+		DELETE FROM ciudad
+		WHERE id = $1
+	`, c.Id)
 	if err != nil {
 		return err
 	}
