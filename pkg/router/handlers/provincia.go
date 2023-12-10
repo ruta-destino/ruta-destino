@@ -11,7 +11,7 @@ import (
 
 type Provincia struct{}
 
-func (p *Provincia) List(c *fiber.Ctx) error {
+func (*Provincia) List(c *fiber.Ctx) error {
 	model := models.Provincia{}
 	provincias, err := model.List(database.Db)
 	if err != nil {
@@ -27,7 +27,7 @@ func (p *Provincia) List(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (p *Provincia) Insert(c *fiber.Ctx) error {
+func (*Provincia) Insert(c *fiber.Ctx) error {
 	serializer := serializers.Provincia{}
 	err := c.BodyParser(&serializer)
 	if err != nil {
@@ -46,7 +46,7 @@ func (p *Provincia) Insert(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (p *Provincia) Update(c *fiber.Ctx) error {
+func (*Provincia) Update(c *fiber.Ctx) error {
 	serializer := serializers.Provincia{}
 	err := c.BodyParser(&serializer)
 	if err != nil {
@@ -72,7 +72,7 @@ func (p *Provincia) Update(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (p *Provincia) Delete(c *fiber.Ctx) error {
+func (*Provincia) Delete(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {

@@ -11,7 +11,7 @@ import (
 
 type Region struct{}
 
-func (r *Region) List(c *fiber.Ctx) error {
+func (*Region) List(c *fiber.Ctx) error {
 	model := models.Region{}
 	regiones, err := model.List(database.Db)
 	if err != nil {
@@ -27,7 +27,7 @@ func (r *Region) List(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (r *Region) Insert(c *fiber.Ctx) error {
+func (*Region) Insert(c *fiber.Ctx) error {
 	serializer := serializers.Region{}
 	err := c.BodyParser(&serializer)
 	if err != nil {
@@ -46,7 +46,7 @@ func (r *Region) Insert(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (r *Region) Update(c *fiber.Ctx) error {
+func (*Region) Update(c *fiber.Ctx) error {
 	serializer := serializers.Region{}
 	err := c.BodyParser(&serializer)
 	if err != nil {
@@ -72,7 +72,7 @@ func (r *Region) Update(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (r *Region) Delete(c *fiber.Ctx) error {
+func (*Region) Delete(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
