@@ -1,19 +1,20 @@
 package handlers
 
 import (
-	"ruta-destino/pkg/database"
 	"ruta-destino/pkg/database/models"
+	"ruta-destino/pkg/database/services"
 	"ruta-destino/pkg/router/serializers"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-type Provincia struct{}
+type Provincia struct {
+	Service *services.Provincia
+}
 
-func (*Provincia) List(c *fiber.Ctx) error {
-	model := models.Provincia{}
-	provincias, err := model.List(database.Db)
+func (h *Provincia) List(c *fiber.Ctx) error {
+	provincias, err := h.Service.List()
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't get provincia entries from db",
@@ -27,7 +28,7 @@ func (*Provincia) List(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (*Provincia) Insert(c *fiber.Ctx) error {
+func (h *Provincia) Insert(c *fiber.Ctx) error {
 	serializer := serializers.Provincia{}
 	err := c.BodyParser(&serializer)
 	if err != nil {
@@ -36,7 +37,7 @@ func (*Provincia) Insert(c *fiber.Ctx) error {
 		})
 	}
 	model := models.Provincia(serializer)
-	err = model.Insert(database.Db)
+	err = h.Service.Insert(&model)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't insert `provincia`",
@@ -46,7 +47,7 @@ func (*Provincia) Insert(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (*Provincia) Update(c *fiber.Ctx) error {
+func (h *Provincia) Update(c *fiber.Ctx) error {
 	serializer := serializers.Provincia{}
 	err := c.BodyParser(&serializer)
 	if err != nil {
@@ -61,18 +62,18 @@ func (*Provincia) Update(c *fiber.Ctx) error {
 			"error": "Invalid id, not a number",
 		})
 	}
-	serializer.Id = uint(id)
 	model := models.Provincia(serializer)
-	err = model.Update(database.Db)
+	err = h.Service.Update(uint(id), &model)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't update provincia entry",
 		})
 	}
+	serializer.Id = uint(id)
 	return c.JSON(serializer)
 }
 
-func (*Provincia) Delete(c *fiber.Ctx) error {
+func (h *Provincia) Delete(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
@@ -80,8 +81,7 @@ func (*Provincia) Delete(c *fiber.Ctx) error {
 			"error": "Invalid id, not a number",
 		})
 	}
-	model := models.Provincia{Id: uint(id)}
-	err = model.Delete(database.Db)
+	err = h.Service.Delete(uint(id))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't delete provincia entry",
