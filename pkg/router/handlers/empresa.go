@@ -1,19 +1,20 @@
 package handlers
 
 import (
-	"ruta-destino/pkg/database"
 	"ruta-destino/pkg/database/models"
+	"ruta-destino/pkg/database/services"
 	"ruta-destino/pkg/router/serializers"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-type Empresa struct{}
+type Empresa struct {
+	Service *services.Empresa
+}
 
-func (*Empresa) List(c *fiber.Ctx) error {
-	model := models.Empresa{}
-	empresas, err := model.List(database.Db)
+func (h *Empresa) List(c *fiber.Ctx) error {
+	empresas, err := h.Service.List()
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't get empresa entries from db",
@@ -27,7 +28,7 @@ func (*Empresa) List(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (*Empresa) Get(c *fiber.Ctx) error {
+func (h *Empresa) Get(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
@@ -35,8 +36,7 @@ func (*Empresa) Get(c *fiber.Ctx) error {
 			"error": "Invalid id, not a number",
 		})
 	}
-	model := models.Empresa{Id: uint(id)}
-	empresa, err := model.Get(database.Db)
+	empresa, err := h.Service.Get(uint(id))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't get empresa entry",
@@ -46,7 +46,7 @@ func (*Empresa) Get(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (*Empresa) Insert(c *fiber.Ctx) error {
+func (h *Empresa) Insert(c *fiber.Ctx) error {
 	serializer := serializers.Empresa{}
 	err := c.BodyParser(&serializer)
 	if err != nil {
@@ -55,7 +55,7 @@ func (*Empresa) Insert(c *fiber.Ctx) error {
 		})
 	}
 	model := models.Empresa(serializer)
-	err = model.Insert(database.Db)
+	err = h.Service.Insert(&model)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't insert `empresa`",
@@ -65,7 +65,7 @@ func (*Empresa) Insert(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (*Empresa) Update(c *fiber.Ctx) error {
+func (h *Empresa) Update(c *fiber.Ctx) error {
 	serializer := serializers.Empresa{}
 	err := c.BodyParser(&serializer)
 	if err != nil {
@@ -80,18 +80,18 @@ func (*Empresa) Update(c *fiber.Ctx) error {
 			"error": "Invalid id, not a number",
 		})
 	}
-	serializer.Id = uint(id)
 	model := models.Empresa(serializer)
-	err = model.Update(database.Db)
+	err = h.Service.Update(uint(id), &model)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't update empresa entry",
 		})
 	}
+	serializer.Id = uint(id)
 	return c.JSON(serializer)
 }
 
-func (*Empresa) Delete(c *fiber.Ctx) error {
+func (h *Empresa) Delete(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
@@ -99,8 +99,7 @@ func (*Empresa) Delete(c *fiber.Ctx) error {
 			"error": "Invalid id, not a number",
 		})
 	}
-	model := models.Empresa{Id: uint(id)}
-	err = model.Delete(database.Db)
+	err = h.Service.Delete(uint(id))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't delete empresa entry",
@@ -109,7 +108,7 @@ func (*Empresa) Delete(c *fiber.Ctx) error {
 	return c.Status(204).JSON(fiber.Map{})
 }
 
-func (*Empresa) ListTerminales(c *fiber.Ctx) error {
+func (h *Empresa) ListTerminales(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
@@ -117,8 +116,7 @@ func (*Empresa) ListTerminales(c *fiber.Ctx) error {
 			"error": "Invalid id, not a number",
 		})
 	}
-	model := models.Empresa{Id: uint(id)}
-	terminales, err := model.ListTerminales(database.Db)
+	terminales, err := h.Service.ListTerminales(uint(id))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't get terminal entries from db",
@@ -132,7 +130,7 @@ func (*Empresa) ListTerminales(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
-func (*Empresa) LinkTerminal(c *fiber.Ctx) error {
+func (h *Empresa) LinkTerminal(c *fiber.Ctx) error {
 	serializer := serializers.EmpresaLinkTerminal{}
 	err := c.BodyParser(&serializer)
 	if err != nil {
@@ -147,8 +145,7 @@ func (*Empresa) LinkTerminal(c *fiber.Ctx) error {
 			"error": "Invalid id, not a number",
 		})
 	}
-	model := models.Empresa{Id: uint(id)}
-	err = model.LinkTerminal(database.Db, serializer.Id)
+	err = h.Service.LinkTerminal(uint(id), serializer.Id)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't link to terminal",
@@ -157,7 +154,7 @@ func (*Empresa) LinkTerminal(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{})
 }
 
-func (*Empresa) UnlinkTerminal(c *fiber.Ctx) error {
+func (h *Empresa) UnlinkTerminal(c *fiber.Ctx) error {
 	serializer := serializers.EmpresaLinkTerminal{}
 	err := c.BodyParser(&serializer)
 	if err != nil {
@@ -172,8 +169,7 @@ func (*Empresa) UnlinkTerminal(c *fiber.Ctx) error {
 			"error": "Invalid id, not a number",
 		})
 	}
-	model := models.Empresa{Id: uint(id)}
-	err = model.UnlinkTerminal(database.Db, serializer.Id)
+	err = h.Service.UnlinkTerminal(uint(id), serializer.Id)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"error": "Couldn't unlink from terminal",

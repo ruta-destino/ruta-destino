@@ -1,15 +1,18 @@
 package routes
 
 import (
+	"ruta-destino/pkg/database"
+	"ruta-destino/pkg/database/services"
 	"ruta-destino/pkg/router/handlers"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func SetupEmpresaRoutes(router fiber.Router) {
-	group := router.Group("/empresa")
+	service := services.NewEmpresaService(database.Db)
+	empresa := handlers.Empresa{Service: service}
 
-	empresa := handlers.Empresa{}
+	group := router.Group("/empresa")
 	group.Get("/", empresa.List)
 	group.Post("/", empresa.Insert)
 	group.Post("/:id", empresa.Update)
