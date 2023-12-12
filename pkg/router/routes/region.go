@@ -1,17 +1,20 @@
 package routes
 
 import (
+	"ruta-destino/pkg/database"
+	"ruta-destino/pkg/database/services"
 	"ruta-destino/pkg/router/handlers"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func SetupRegionRoutes(router fiber.Router) {
-	regionGroup := router.Group("/region")
+	service := services.NewRegionService(database.Db)
+	region := handlers.Region{Service: service}
 
-	region := handlers.Region{}
-	regionGroup.Get("/", region.List)
-	regionGroup.Post("/", region.Insert)
-	regionGroup.Post("/:id", region.Update)
-	regionGroup.Delete("/:id", region.Delete)
+	group := router.Group("/region")
+	group.Get("/", region.List)
+	group.Post("/", region.Insert)
+	group.Post("/:id", region.Update)
+	group.Delete("/:id", region.Delete)
 }
