@@ -1,2 +1,6 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<h1>Zona de administración</h1>
+<p>
+    Esta interfaz permite controlar los datos base que están presentes dentro de
+    la aplicación. Está pensado únicamente para los administradores de Ruta
+    Destino.
+</p>

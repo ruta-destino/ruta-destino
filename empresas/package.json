@@ -1,5 +1,5 @@
 {
-	"name": "empresas",
+	"name": "administradores",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -16,6 +16,7 @@
 		"svelte-check": "^3.6.0",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
+		"typescript-svelte-plugin": "^0.3.36",
 		"vite": "^4.4.2"
 	},
 	"type": "module"
