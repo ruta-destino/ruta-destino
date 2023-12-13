@@ -2,6 +2,13 @@
     import type { PageData } from "./$types";
     export let data: PageData;
     export let form;
+
+    function eliminar(event: SubmitEvent) {
+        const continuar = confirm(`¿Desea continuar?`);
+        if (!continuar) {
+            event.preventDefault();
+        }
+    }
 </script>
 
 <h1>Región</h1>
@@ -28,12 +35,19 @@
     <thead>
         <th>Nombre</th>
         <th>Numero</th>
+        <th>Eliminar</th>
     </thead>
     <tbody>
         {#each data.regiones as region (region.id)}
             <tr>
                 <td>{region.nombre}</td>
                 <td>{region.numero}</td>
+                <td>
+                    <form action="?/delete" method="post" on:submit={eliminar}>
+                        <input type="submit" value="X" />
+                        <input type="hidden" value={region.id} name="id" />
+                    </form>
+                </td>
             </tr>
         {/each}
     </tbody>
