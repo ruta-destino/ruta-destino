@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"os"
+	"ruta-destino/pkg/config"
 	"ruta-destino/pkg/database"
 	"ruta-destino/pkg/router"
 
@@ -10,12 +10,8 @@ import (
 )
 
 func main() {
-	conn, ok := os.LookupEnv("CONNECTION_STRING")
-	if !ok {
-		log.Fatal("CONNECTION_STRING no está definida")
-	}
-
-	_, err := database.Open(conn)
+	connectionString := config.GetConnectionString()
+	_, err := database.Open(connectionString)
 	if err != nil {
 		log.Fatal(err)
 	}
