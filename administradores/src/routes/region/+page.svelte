@@ -31,24 +31,32 @@
     <input type="submit" value="Insertar" />
 </form>
 
-<table border="1">
-    <thead>
-        <th>Nombre</th>
-        <th>Numero</th>
-        <th>Eliminar</th>
-    </thead>
-    <tbody>
-        {#each data.regiones as region (region.id)}
-            <tr>
-                <td>{region.nombre}</td>
-                <td>{region.numero}</td>
-                <td>
-                    <form action="?/delete" method="post" on:submit={eliminar}>
-                        <input type="submit" value="X" />
-                        <input type="hidden" value={region.id} name="id" />
-                    </form>
-                </td>
-            </tr>
-        {/each}
-    </tbody>
-</table>
+{#if data.regiones.length > 0}
+    <table border="1">
+        <thead>
+            <th>Nombre</th>
+            <th>Numero</th>
+            <th>Eliminar</th>
+        </thead>
+        <tbody>
+            {#each data.regiones as region (region.id)}
+                <tr>
+                    <td>{region.nombre}</td>
+                    <td>{region.numero}</td>
+                    <td>
+                        <form
+                            action="?/delete"
+                            method="post"
+                            on:submit={eliminar}
+                        >
+                            <input type="submit" value="X" />
+                            <input type="hidden" value={region.id} name="id" />
+                        </form>
+                    </td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
+{:else}
+    <p>No hay regiones</p>
+{/if}
