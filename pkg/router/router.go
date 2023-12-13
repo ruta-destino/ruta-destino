@@ -14,4 +14,5 @@ func SetupRoutes(app *fiber.App) {
 	routes.SetupCiudadRoutes(api)
 	routes.SetupTerminalRoutes(api)
 	routes.SetupEmpresaRoutes(api)
+	routes.SetupRecorridoRoutes(api)
 }
