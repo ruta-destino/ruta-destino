@@ -19,10 +19,9 @@ export async function load() {
     };
 }
 
-const form: { [key: string]: FormDataEntryValue | null } = {
-    nombre: null,
-    id_provincia: null,
-    error: null
+type FormKey = "error" | "nombre" | "id_provincia";
+const form: { [key in FormKey]: FormDataEntryValue | null } = {
+    nombre: null, id_provincia: null, error: null
 };
 
 export const actions = {

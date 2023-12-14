@@ -22,29 +22,34 @@ export async function load() {
     return data;
 }
 
-const form = { error: "", nombre: "", id_region: "" }
+type FormKey = "error" | "nombre" | "id_region";
+const form: { [key in FormKey]: FormDataEntryValue | null } = {
+    error: null, nombre: null, id_region: null
+}
 
 export const actions = {
     insert: async ({ request }) => {
         const data = await request.formData();
-        const nombre = data.get("nombre");
-        let id_region = data.get("region")?.valueOf();
-        form.nombre = nombre;
-        form.id_region = id_region;
+        const f_nombre = data.get("nombre");
+        let f_id_region = data.get("region");
+        form.nombre = f_nombre;
+        form.id_region = f_id_region;
 
-        if (nombre === null || nombre === "") {
+        if (typeof f_nombre !== "string" || f_nombre === "") {
             form.error = "Ingrese un nombre";
             return fail(400, form);
         }
-        if (typeof id_region !== "string") {
+        const nombre = f_nombre;
+
+        if (typeof f_id_region !== "string" || f_id_region === "") {
             form.error = "Seleccione una región";
             return fail(400, form);
         }
-        if (id_region === "") {
-            form.error = "Seleccione una región";
+        const id_region = parseInt(f_id_region);
+        if (isNaN(id_region)) {
+            form.error = "Seleccione una región válida"
             return fail(400, form);
         }
-        id_region = parseInt(id_region);
 
         const req = await fetch(`${API_URL}/provincia`, {
             method: "POST",

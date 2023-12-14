@@ -21,39 +21,39 @@ export async function load({ params }) {
     return data;
 }
 
-const form: { [key: string]: FormDataEntryValue | null } = {
-    nombre: null,
-    id_region: null,
-    error: null
+type FormKey = "error" | "nombre" | "id_region";
+const form: { [key in FormKey]: FormDataEntryValue | null } = {
+    nombre: null, id_region: null, error: null
 };
 
 export const actions = {
     update: async ({ request }) => {
         const data = await request.formData();
-        const fId = data.get("id");
-        const fNombre = data.get("nombre");
-        const fIdRegion = data.get("id_region");
+        const f_id = data.get("id");
+        const f_nombre = data.get("nombre");
+        const f_id_region = data.get("id_region");
+        form.nombre = f_nombre;
+        form.id_region = f_id_region;
 
-        form.nombre = fNombre;
-        form.id_region = fIdRegion;
-
-        if (fNombre === null || fNombre === "") {
+        if (typeof f_nombre !== "string" || f_nombre === "") {
             form.error = "Ingrese un nombre";
             return fail(400, form);
         }
-        if (typeof fIdRegion !== "string") {
-            form.error = "Seleccione una región";
-            return fail(400, form);
-        }
-        if (fIdRegion === "") {
-            form.error = "Seleccione una región";
-            return fail(400, form);
-        }
-        const id_region = parseInt(fIdRegion);
+        const nombre = f_nombre;
 
-        const req = await fetch(`${API_URL}/provincia/${fId}`, {
+        if (typeof f_id_region !== "string" || f_id_region === "") {
+            form.error = "Seleccione una región";
+            return fail(400, form);
+        }
+        const id_region = parseInt(f_id_region);
+        if (isNaN(id_region)) {
+            form.error = "Seleccione una región válida";
+            return fail(400, form);
+        }
+
+        const req = await fetch(`${API_URL}/provincia/${f_id}`, {
             method: "POST",
-            body: JSON.stringify({ nombre: fNombre, id_region: id_region }),
+            body: JSON.stringify({ nombre, id_region }),
             headers: { "Content-Type": "application/json" }
         });
 

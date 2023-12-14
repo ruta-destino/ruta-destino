@@ -12,31 +12,35 @@ export async function load({ params }) {
     return { region: res };
 }
 
+type FormKey = "error" | "nombre" | "numero";
+const form: { [key in FormKey]: FormDataEntryValue | null } = {
+    error: null, nombre: null, numero: null
+}
+
 export const actions = {
     update: async ({ request }) => {
         const data = await request.formData();
         const id = data.get("id");
-        const nombre = data.get("nombre");
-        let numero = data.get("numero")?.valueOf();
-        const form = {
-            nombre: nombre,
-            numero: numero,
-            error: ""
-        };
+        const f_nombre = data.get("nombre");
+        let f_numero = data.get("numero");
+        form.nombre = f_nombre;
+        form.numero = f_numero;
 
-        if (nombre === null || nombre === "") {
+        if (typeof f_nombre !== "string" || f_nombre === "") {
             form.error = "Ingrese un nombre";
             return fail(400, form);
         }
-        if (typeof numero !== "string") {
+        const nombre = f_nombre;
+
+        if (typeof f_numero !== "string" || f_numero === "") {
             form.error = "Ingrese un número";
             return fail(400, form);
         }
-        if (numero === "") {
-            form.error = "Ingrese un número";
+        const numero = parseInt(f_numero);
+        if (isNaN(numero)) {
+            form.error = "Ingrese un número válido";
             return fail(400, form);
         }
-        numero = parseInt(numero);
 
         const req = await fetch(`${API_URL}/region/${id}`, {
             method: "POST",
