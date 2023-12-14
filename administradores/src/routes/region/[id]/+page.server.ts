@@ -1,19 +1,21 @@
 import { API_URL } from "$env/static/private";
-import { fail } from "@sveltejs/kit";
+import { error, fail, redirect } from "@sveltejs/kit";
 import type { Region } from "$lib/server/models.js";
 
-export async function load() {
-    const response = await fetch(`${API_URL}/region`);
-    if (!response.ok) {
-        return { regiones: [] };
+export async function load({ params }) {
+    const id = params.id;
+    const req = await fetch(`${API_URL}/region/${id}`);
+    if (!req.ok) {
+        throw error(404, 'Not Found');
     }
-    const regiones: Region[] = await response.json();
-    return { regiones: regiones };
+    const res: Region = await req.json();
+    return { region: res };
 }
 
 export const actions = {
-    insert: async ({ request }) => {
+    update: async ({ request }) => {
         const data = await request.formData();
+        const id = data.get("id");
         const nombre = data.get("nombre");
         let numero = data.get("numero")?.valueOf();
         const form = {
@@ -36,7 +38,7 @@ export const actions = {
         }
         numero = parseInt(numero);
 
-        const req = await fetch(`${API_URL}/region`, {
+        const req = await fetch(`${API_URL}/region/${id}`, {
             method: "POST",
             body: JSON.stringify({ nombre, numero }),
             headers: { "Content-Type": "application/json" }
@@ -47,19 +49,7 @@ export const actions = {
             form.error = res["error"];
             return fail(400, form);
         }
-    },
-    delete: async ({ request }) => {
-        const data = await request.formData();
-        let id = data.get("id") || "";
 
-        const req = await fetch(`${API_URL}/region/${id}`, {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" }
-        })
-
-        if (!req.ok) {
-            console.log((await req.json()))
-            return fail(400, {})
-        }
+        throw redirect(302, "/region")
     }
 }

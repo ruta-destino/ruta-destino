@@ -36,6 +36,7 @@
         <thead>
             <th>Nombre</th>
             <th>Numero</th>
+            <th>Actualizar</th>
             <th>Eliminar</th>
         </thead>
         <tbody>
@@ -43,6 +44,7 @@
                 <tr>
                     <td>{region.nombre}</td>
                     <td>{region.numero}</td>
+                    <td><a href={`region/${region.id}`}>⟳</a></td>
                     <td>
                         <form
                             action="?/delete"

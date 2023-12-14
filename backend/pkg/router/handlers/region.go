@@ -28,6 +28,24 @@ func (h *Region) List(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
+func (h *Region) Get(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 0)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid id, not a number",
+		})
+	}
+	model, err := h.Service.Get(uint(id))
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't get region entry",
+		})
+	}
+	serializer := serializers.Region(*model)
+	return c.JSON(serializer)
+}
+
 func (h *Region) Insert(c *fiber.Ctx) error {
 	serializer := serializers.Region{}
 	err := c.BodyParser(&serializer)

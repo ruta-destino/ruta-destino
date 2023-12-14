@@ -26,6 +26,19 @@ func (s *Region) List() ([]models.Region, error) {
 	return regiones, nil
 }
 
+func (s *Region) Get(regionId uint) (*models.Region, error) {
+	region := models.Region{}
+	err := s.Db.Get(&region, `
+		SELECT *
+		FROM region
+		WHERE id = $1
+	`, regionId)
+	if err != nil {
+		return nil, err
+	}
+	return &region, nil
+}
+
 func (s *Region) Insert(region *models.Region) error {
 	result := s.Db.QueryRow(`
 		INSERT INTO region (nombre, numero)
