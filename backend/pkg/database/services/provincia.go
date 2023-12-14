@@ -17,8 +17,10 @@ func NewProvinciaService(db *sqlx.DB) *Provincia {
 func (s *Provincia) List() ([]models.Provincia, error) {
 	provincias := []models.Provincia{}
 	err := s.Db.Select(&provincias, `
-		SELECT *
+		SELECT provincia.*, region.nombre AS "nombre_region"
 		FROM provincia
+		INNER JOIN region
+		ON provincia.id_region = region.id
 	`)
 	if err != nil {
 		return nil, err

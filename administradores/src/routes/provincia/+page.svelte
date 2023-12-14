@@ -32,7 +32,7 @@
         <tbody>
             {#each data.provincias as provincia (provincia.id)}
                 <tr>
-                    <td>{provincia.id_region}</td>
+                    <td>{provincia.nombre_region}</td>
                     <td>{provincia.nombre}</td>
                 </tr>
             {/each}

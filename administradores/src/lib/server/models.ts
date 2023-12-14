@@ -8,4 +8,5 @@ export type Provincia = {
     id: number;
     nombre: string;
     id_region: number;
+    nombre_region: string;
 }
