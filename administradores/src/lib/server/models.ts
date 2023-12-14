@@ -17,3 +17,12 @@ export type Ciudad = {
     id_provincia: number;
     nombre_provincia: string;
 }
+
+export type Terminal = {
+    id: number;
+    nombre: string;
+    longitud: number;
+    latitud: number;
+    direccion: string;
+    id_ciudad: number;
+}
