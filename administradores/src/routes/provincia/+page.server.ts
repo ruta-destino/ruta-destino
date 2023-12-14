@@ -22,16 +22,15 @@ export async function load() {
     return data;
 }
 
+const form = { error: "", nombre: "", id_region: "" }
+
 export const actions = {
     insert: async ({ request }) => {
         const data = await request.formData();
         const nombre = data.get("nombre");
         let id_region = data.get("region")?.valueOf();
-        const form = {
-            nombre: nombre,
-            id_region: id_region,
-            error: ""
-        };
+        form.nombre = nombre;
+        form.id_region = id_region;
 
         if (nombre === null || nombre === "") {
             form.error = "Ingrese un nombre";
@@ -69,8 +68,9 @@ export const actions = {
         })
 
         if (!req.ok) {
-            console.log((await req.json()))
-            return fail(400, {})
+            const res = await req.json()
+            form.error = res["error"]
+            return fail(400, form)
         }
     }
 }
