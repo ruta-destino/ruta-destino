@@ -39,7 +39,7 @@ func (h *Provincia) Get(c *fiber.Ctx) error {
 	model, err := h.Service.Get(uint(id))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't get region entry",
+			"error": "Couldn't get provincia entry",
 		})
 	}
 	serializer := serializers.Provincia(*model)

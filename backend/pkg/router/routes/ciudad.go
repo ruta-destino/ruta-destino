@@ -14,6 +14,7 @@ func SetupCiudadRoutes(router fiber.Router) {
 
 	group := router.Group("/ciudad")
 	group.Get("/", ciudad.List)
+	group.Get("/:id", ciudad.Get)
 	group.Post("/", ciudad.Insert)
 	group.Post("/:id", ciudad.Update)
 	group.Delete("/:id", ciudad.Delete)

@@ -17,13 +17,28 @@ func NewCiudadService(db *sqlx.DB) *Ciudad {
 func (s *Ciudad) List() ([]models.Ciudad, error) {
 	ciudades := []models.Ciudad{}
 	err := s.Db.Select(&ciudades, `
-		SELECT *
+		SELECT ciudad.*, provincia.nombre AS "nombre_provincia"
 		FROM ciudad
+		INNER JOIN provincia
+		ON ciudad.id_provincia = provincia.id
 	`)
 	if err != nil {
 		return nil, err
 	}
 	return ciudades, nil
+}
+
+func (s *Ciudad) Get(ciudadId uint) (*models.Ciudad, error) {
+	ciudad := models.Ciudad{}
+	err := s.Db.Get(&ciudad, `
+		SELECT *
+		FROM ciudad
+		WHERE id = $1
+	`, ciudadId)
+	if err != nil {
+		return nil, err
+	}
+	return &ciudad, nil
 }
 
 func (s *Ciudad) Insert(ciudad *models.Ciudad) error {

@@ -10,3 +10,10 @@ export type Provincia = {
     id_region: number;
     nombre_region: string;
 }
+
+export type Ciudad = {
+    id: number;
+    nombre: string;
+    id_provincia: number;
+    nombre_provincia: string;
+}
