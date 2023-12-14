@@ -58,5 +58,19 @@ export const actions = {
             form.error = res["error"];
             return fail(400, form);
         }
+    },
+    delete: async ({ request }) => {
+        const data = await request.formData();
+        let id = data.get("id") || "";
+
+        const req = await fetch(`${API_URL}/provincia/${id}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        })
+
+        if (!req.ok) {
+            console.log((await req.json()))
+            return fail(400, {})
+        }
     }
 }
