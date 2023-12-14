@@ -17,8 +17,10 @@ func NewTerminalService(db *sqlx.DB) *Terminal {
 func (s *Terminal) List() ([]models.Terminal, error) {
 	terminales := []models.Terminal{}
 	err := s.Db.Select(&terminales, `
-		SELECT *
+		SELECT terminal.*, ciudad.nombre AS "nombre_ciudad"
 		FROM terminal
+		INNER JOIN ciudad
+		ON terminal.id_ciudad = ciudad.id
 	`)
 	if err != nil {
 		return nil, err

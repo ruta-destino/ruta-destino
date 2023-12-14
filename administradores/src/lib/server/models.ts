@@ -25,4 +25,5 @@ export type Terminal = {
     latitud: number;
     direccion: string;
     id_ciudad: number;
+    nombre_ciudad: string;
 }

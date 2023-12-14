@@ -68,7 +68,7 @@
         <tbody>
             {#each data.terminales as terminal (terminal.id)}
                 <tr>
-                    <td></td>
+                    <td>{terminal.nombre_ciudad}</td>
                     <td>{terminal.nombre}</td>
                     <td>{terminal.direccion}</td>
                     <td>{terminal.latitud}</td>
