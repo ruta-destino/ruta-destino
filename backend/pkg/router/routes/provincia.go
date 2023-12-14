@@ -14,6 +14,7 @@ func SetupProvinciaRoutes(router fiber.Router) {
 
 	group := router.Group("/provincia")
 	group.Get("/", provincia.List)
+	group.Get("/:id", provincia.Get)
 	group.Post("/", provincia.Insert)
 	group.Post("/:id", provincia.Update)
 	group.Delete("/:id", provincia.Delete)

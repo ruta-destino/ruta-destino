@@ -28,6 +28,19 @@ func (s *Provincia) List() ([]models.Provincia, error) {
 	return provincias, nil
 }
 
+func (s *Provincia) Get(provinciaId uint) (*models.Provincia, error) {
+	provincia := models.Provincia{}
+	err := s.Db.Get(&provincia, `
+		SELECT *
+		FROM provincia
+		WHERE id = $1
+	`, provinciaId)
+	if err != nil {
+		return nil, err
+	}
+	return &provincia, nil
+}
+
 func (s *Provincia) Insert(provincia *models.Provincia) error {
 	result := s.Db.QueryRow(`
 		INSERT INTO provincia (nombre, id_region)

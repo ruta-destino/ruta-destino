@@ -35,6 +35,7 @@
         <thead>
             <th>Region</th>
             <th>Provincia</th>
+            <th>Actualizar</th>
             <th>Eliminar</th>
         </thead>
         <tbody>
@@ -42,6 +43,7 @@
                 <tr>
                     <td>{provincia.nombre_region}</td>
                     <td>{provincia.nombre}</td>
+                    <td><a href={`/provincia/${provincia.id}`}>⟳</a></td>
                     <td>
                         <form
                             action="?/delete"
