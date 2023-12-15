@@ -73,7 +73,7 @@
                     <td>{terminal.direccion}</td>
                     <td>{terminal.latitud}</td>
                     <td>{terminal.longitud}</td>
-                    <td><a href={`/ciudad/${terminal.id}`}>⟳</a></td>
+                    <td><a href={`/terminal/${terminal.id}`}>⟳</a></td>
                     <td>
                         <form
                             action="?/delete"
