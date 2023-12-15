@@ -19,6 +19,7 @@ func (s *Region) List() ([]models.Region, error) {
 	err := s.Db.Select(&regiones, `
 		SELECT *
 		FROM region
+		ORDER BY numero
 	`)
 	if err != nil {
 		return nil, err

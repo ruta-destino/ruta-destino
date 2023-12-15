@@ -34,7 +34,7 @@ export const actions = {
             form.error = "Ingrese un número";
             return fail(400, form);
         }
-        const numero = parseInt(f_nombre);
+        const numero = parseInt(f_numero);
         if (isNaN(numero)) {
             form.error = "Ingrese un número válido";
             return fail(400, form);
