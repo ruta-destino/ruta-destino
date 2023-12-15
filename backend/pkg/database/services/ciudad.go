@@ -21,6 +21,9 @@ func (s *Ciudad) List() ([]models.Ciudad, error) {
 		FROM ciudad
 		INNER JOIN provincia
 		ON ciudad.id_provincia = provincia.id
+		INNER JOIN region
+		ON provincia.id_region = region.id
+		ORDER BY region.numero, provincia.nombre, ciudad.nombre
 	`)
 	if err != nil {
 		return nil, err
