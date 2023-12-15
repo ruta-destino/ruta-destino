@@ -2,17 +2,22 @@ version: "3.9"
 
 services:
   backend:
-    build: .
-    restart: always
-    depends_on:
-      - db
+    image: cosmtrek/air:v1.49.0
+    working_dir: /app
     env_file:
       - .env
     ports:
       - 8080:3000
+    volumes:
+      - ./backend:/app
+    entrypoint:
+      [
+        "/go/bin/air",
+        "--build.cmd",
+        "go build -buildvcs=false -o ./tmp/main ."
+      ]
   db:
     image: postgres:16
-    restart: always
     env_file:
       - .env
     ports:
