@@ -24,6 +24,16 @@ services:
     image: migrate/migrate:v4.16.2
     volumes:
       - ./backend/migrations:/migrations
+  administradores:
+    build:
+      context: ./administradores
+    depends_on:
+      - backend
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 7001:3000
 
 volumes:
   postgres-data:
