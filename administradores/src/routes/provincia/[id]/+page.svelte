@@ -27,6 +27,5 @@
         value={form?.nombre ?? data.provincia.nombre}
         required
     />
-    <input type="hidden" name="id" value={data.provincia.id} />
     <input type="submit" value="Actualizar" />
 </form>

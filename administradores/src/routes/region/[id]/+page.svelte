@@ -23,6 +23,5 @@
         placeholder="Numero"
         required
     />
-    <input type="hidden" value={data.region.id} name="id" />
     <input type="submit" value="Actualizar" />
 </form>

@@ -31,6 +31,5 @@
         value={form?.nombre ?? data.ciudad.nombre}
         required
     />
-    <input type="hidden" name="id" value={data.ciudad.id} />
     <input type="submit" value="Actualizar" />
 </form>

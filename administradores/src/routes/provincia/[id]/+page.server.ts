@@ -27,9 +27,8 @@ const form: { [key in FormKey]: FormDataEntryValue | null } = {
 };
 
 export const actions = {
-    update: async ({ request }) => {
+    update: async ({ request, params }) => {
         const data = await request.formData();
-        const f_id = data.get("id");
         const f_nombre = data.get("nombre");
         const f_id_region = data.get("id_region");
         form.nombre = f_nombre;
@@ -51,7 +50,8 @@ export const actions = {
             return fail(400, form);
         }
 
-        const req = await fetch(`${API_URL}/provincia/${f_id}`, {
+        const id = params.id;
+        const req = await fetch(`${API_URL}/provincia/${id}`, {
             method: "POST",
             body: JSON.stringify({ nombre, id_region }),
             headers: { "Content-Type": "application/json" }

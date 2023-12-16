@@ -54,6 +54,5 @@
         value={form?.longitud ?? data.terminal.longitud}
         required
     />
-    <input type="hidden" value={data.terminal.id} name="id" />
     <input type="submit" value="Actualizar" />
 </form>

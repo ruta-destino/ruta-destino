@@ -15,6 +15,5 @@
         value={form?.nombre ?? data.empresa.nombre}
         required
     />
-    <input type="hidden" value={data.empresa.id} name="id" />
     <input type="submit" value="Actualizar" />
 </form>

@@ -18,9 +18,8 @@ const form: { [key in FormKey]: FormDataEntryValue | null } = {
 }
 
 export const actions = {
-    update: async ({ request }) => {
+    update: async ({ request, params }) => {
         const data = await request.formData();
-        const f_id = data.get("id");
         const f_nombre = data.get("nombre");
         form.nombre = f_nombre;
 
@@ -30,7 +29,8 @@ export const actions = {
         }
         const nombre = f_nombre;
 
-        const req = await fetch(`${API_URL}/empresa/${f_id}`, {
+        const id = params.id;
+        const req = await fetch(`${API_URL}/empresa/${id}`, {
             method: "POST",
             body: JSON.stringify({ nombre }),
             headers: { "Content-Type": "application/json" }

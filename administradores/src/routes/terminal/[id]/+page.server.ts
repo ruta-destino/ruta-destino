@@ -27,14 +27,13 @@ const form: { [key in FormKey]: FormDataEntryValue | null } = {
 };
 
 export const actions = {
-    update: async ({ request }) => {
+    update: async ({ request, params }) => {
         const data = await request.formData();
-        const f_id = data.get("id");
         const f_nombre = data.get("nombre");
         const f_direccion = data.get("direccion");
         const f_latitud = data.get("latitud");
         const f_longitud = data.get("longitud");
-        let f_id_ciudad = data.get("id_ciudad");
+        const f_id_ciudad = data.get("id_ciudad");
         form.nombre = f_nombre;
         form.direccion = f_direccion;
         form.latitud = f_latitud;
@@ -91,7 +90,8 @@ export const actions = {
             return fail(400, form);
         };
 
-        const req = await fetch(`${API_URL}/terminal/${f_id}`, {
+        const id = params.id;
+        const req = await fetch(`${API_URL}/terminal/${id}`, {
             method: "POST",
             body: JSON.stringify({ nombre, direccion, latitud, longitud, id_ciudad }),
             headers: { "Content-Type": "application/json" }
