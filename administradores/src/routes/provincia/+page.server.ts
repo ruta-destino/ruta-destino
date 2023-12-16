@@ -46,7 +46,7 @@ export const actions = {
             return fail(400, form);
         }
         const id_region = parseInt(f_id_region);
-        if (isNaN(id_region)) {
+        if (isNaN(id_region) || id_region <= 0) {
             form.error = "Seleccione una región válida"
             return fail(400, form);
         }

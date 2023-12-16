@@ -8,7 +8,7 @@
 <a href="/provincia">Ver provincias</a>
 <p>{form?.error || ""}</p>
 <form method="post" action="?/update">
-    <select name="id_region">
+    <select name="id_region" required>
         <option value="">---</option>
         {#each data.regiones as region (region.id)}
             {#if form?.id_region === String(region.id)}
@@ -25,6 +25,7 @@
         placeholder="Nombre"
         name="nombre"
         value={form?.nombre ?? data.provincia.nombre}
+        required
     />
     <input type="hidden" name="id" value={data.provincia.id} />
     <input type="submit" value="Actualizar" />
