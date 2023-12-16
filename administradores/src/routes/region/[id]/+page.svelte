@@ -12,11 +12,16 @@
         type="text"
         value={form?.nombre ?? data.region.nombre}
         name="nombre"
+        placeholder="Nombre"
+        required
     />
     <input
         type="number"
         value={form?.numero ?? data.region.numero}
         name="numero"
+        min="1"
+        placeholder="Numero"
+        required
     />
     <input type="hidden" value={data.region.id} name="id" />
     <input type="submit" value="Actualizar" />

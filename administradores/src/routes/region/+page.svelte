@@ -20,13 +20,15 @@
         placeholder="Nombre"
         name="nombre"
         value={form?.nombre || ""}
+        required
     />
     <input
         type="number"
         placeholder="Numero"
         name="numero"
-        min="0"
+        min="1"
         value={form?.numero || ""}
+        required
     />
     <input type="submit" value="Insertar" />
 </form>

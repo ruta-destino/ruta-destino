@@ -30,7 +30,7 @@ export const actions = {
             form.error = "Ingrese un nombre";
             return fail(400, form);
         }
-        const nombre = f_nombre;
+        const nombre = f_nombre.trim();
 
         if (typeof f_numero !== "string" || f_numero === "") {
             form.error = "Ingrese un número";
@@ -39,6 +39,10 @@ export const actions = {
         const numero = parseInt(f_numero);
         if (isNaN(numero)) {
             form.error = "Ingrese un número válido";
+            return fail(400, form);
+        }
+        if (numero < 1) {
+            form.error = "Ingrese un número mayor a 0";
             return fail(400, form);
         }
 
