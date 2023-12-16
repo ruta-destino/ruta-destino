@@ -1,6 +1,7 @@
-import { API_URL } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import { error, fail, redirect } from "@sveltejs/kit";
 import type { Ciudad, Provincia } from "$lib/server/models.js";
+const API_URL = env.API_URL;
 
 export async function load({ params }) {
     const id = params.id;

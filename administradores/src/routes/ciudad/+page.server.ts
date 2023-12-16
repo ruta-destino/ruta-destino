@@ -1,6 +1,7 @@
-import { API_URL } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import { error, fail } from "@sveltejs/kit";
 import type { Ciudad, Provincia } from "$lib/server/models.js";
+const API_URL = env.API_URL;
 
 export async function load() {
     let req = await fetch(`${API_URL}/provincia`);
