@@ -11,8 +11,14 @@
     <select name="id_provincia">
         <option value="">---</option>
         {#each data.provincias as provincia (provincia.id)}
-            {#if data.ciudad.id_provincia === provincia.id}
-                <option value={provincia.id} selected>{provincia.nombre}</option>
+            {#if form?.id_provincia === String(provincia.id)}
+                <option value={provincia.id} selected>
+                    {provincia.nombre}
+                </option>
+            {:else if form === null && data.ciudad.id_provincia === provincia.id}
+                <option value={provincia.id} selected>
+                    {provincia.nombre}
+                </option>
             {:else}
                 <option value={provincia.id}>{provincia.nombre}</option>
             {/if}

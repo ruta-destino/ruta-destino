@@ -4,14 +4,16 @@
     export let form;
 </script>
 
-<h1>Región</h1>
+<h1>Provincia</h1>
 <a href="/provincia">Ver provincias</a>
 <p>{form?.error || ""}</p>
 <form method="post" action="?/update">
     <select name="id_region">
         <option value="">---</option>
         {#each data.regiones as region (region.id)}
-            {#if data.provincia.id_region === region.id}
+            {#if form?.id_region === String(region.id)}
+                <option value={region.id} selected>{region.nombre}</option>
+            {:else if form === null && data.provincia.id_region === region.id}
                 <option value={region.id} selected>{region.nombre}</option>
             {:else}
                 <option value={region.id}>{region.nombre}</option>

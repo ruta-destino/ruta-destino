@@ -18,7 +18,11 @@
     <select name="id_ciudad">
         <option value="">---</option>
         {#each data.ciudades as ciudad (ciudad.id)}
-            <option value={ciudad.id}>{ciudad.nombre}</option>
+            {#if form?.id_ciudad === String(ciudad.id)}
+                <option value={ciudad.id} selected>{ciudad.nombre}</option>
+            {:else}
+                <option value={ciudad.id}>{ciudad.nombre}</option>
+            {/if}
         {/each}
     </select>
     <input

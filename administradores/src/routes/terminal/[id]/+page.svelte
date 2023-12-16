@@ -11,7 +11,9 @@
     <select name="id_ciudad">
         <option value="">---</option>
         {#each data.ciudades as ciudad (ciudad.id)}
-            {#if data.terminal.id_ciudad === ciudad.id}
+            {#if form?.id_ciudad === String(ciudad.id)}
+                <option value={ciudad.id} selected>{ciudad.nombre}</option>
+            {:else if form === null && data.terminal.id_ciudad === ciudad.id}
                 <option value={ciudad.id} selected>{ciudad.nombre}</option>
             {:else}
                 <option value={ciudad.id}>{ciudad.nombre}</option>
