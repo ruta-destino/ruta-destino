@@ -27,3 +27,8 @@ export type Terminal = {
     id_ciudad: number;
     nombre_ciudad: string;
 }
+
+export type Empresa = {
+    id: number;
+    nombre: string;
+}
