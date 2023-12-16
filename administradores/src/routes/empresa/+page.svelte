@@ -20,6 +20,7 @@
         placeholder="Nombre"
         name="nombre"
         value={form?.nombre || ""}
+        required
     />
     <input type="submit" value="Insertar" />
 </form>
