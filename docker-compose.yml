@@ -36,6 +36,16 @@ services:
     volumes:
       - ./administradores:/app
     command: [ "npm", "run", "dev", "--", "--host" ]
+  empresas:
+    build:
+      context: ./empresas
+    env_file:
+      - .env
+    ports:
+      - 7002:5173
+    volumes:
+      - ./empresas:/app
+    command: [ "npm", "run", "dev", "--", "--host" ]
 
 volumes:
   postgres-data:

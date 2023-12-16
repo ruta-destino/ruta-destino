@@ -28,10 +28,24 @@ services:
     depends_on:
       - backend
     restart: always
+    environment:
+      - ORIGIN=http://localhost:7001
     env_file:
       - .env
     ports:
       - 7001:3000
+  empresas:
+    build:
+      context: ./empresas
+    depends_on:
+      - backend
+    restart: always
+    environment:
+      - ORIGIN=http://localhost:7002
+    env_file:
+      - .env
+    ports:
+      - 7002:3000
 
 volumes:
   postgres-data:
