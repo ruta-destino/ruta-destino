@@ -7,7 +7,7 @@ services:
     env_file:
       - .env
     ports:
-      - 8080:3000
+      - 7000:3000
     volumes:
       - ./backend:/app
     entrypoint:
@@ -20,8 +20,6 @@ services:
     image: postgres:16
     env_file:
       - .env
-    ports:
-      - 5432:5432
     volumes:
       - postgres-data:/var/lib/postgresql/data
   migrate:
@@ -34,7 +32,7 @@ services:
     env_file:
       - .env
     ports:
-      - 7000:5173
+      - 7001:5173
     volumes:
       - ./administradores:/app
     command: [ "npm", "run", "dev", "--", "--host" ]
