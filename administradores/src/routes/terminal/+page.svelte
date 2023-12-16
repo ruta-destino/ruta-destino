@@ -15,7 +15,7 @@
 
 <p>{form?.error || ""}</p>
 <form method="post" action="?/insert">
-    <select name="id_ciudad">
+    <select name="id_ciudad" required>
         <option value="">---</option>
         {#each data.ciudades as ciudad (ciudad.id)}
             {#if form?.id_ciudad === String(ciudad.id)}
@@ -30,12 +30,14 @@
         placeholder="Nombre"
         name="nombre"
         value={form?.nombre || ""}
+        required
     />
     <input
         type="text"
         placeholder="Dirección"
         name="direccion"
         value={form?.direccion || ""}
+        required
     />
     <input
         type="number"
@@ -45,6 +47,7 @@
         step="any"
         placeholder="Latitud"
         value={form?.latitud || ""}
+        required
     />
     <input
         type="number"
@@ -54,6 +57,7 @@
         step="any"
         placeholder="Longitud"
         value={form?.longitud || ""}
+        required
     />
     <input type="submit" value="Insertar" />
 </form>

@@ -8,7 +8,7 @@
 <a href="/terminal">Ver terminales</a>
 <p>{form?.error || ""}</p>
 <form method="post" action="?/update">
-    <select name="id_ciudad">
+    <select name="id_ciudad" required>
         <option value="">---</option>
         {#each data.ciudades as ciudad (ciudad.id)}
             {#if form?.id_ciudad === String(ciudad.id)}
@@ -25,12 +25,14 @@
         placeholder="Nombre"
         name="nombre"
         value={form?.nombre ?? data.terminal.nombre}
+        required
     />
     <input
         type="text"
         placeholder="Dirección"
         name="direccion"
         value={form?.direccion ?? data.terminal.direccion}
+        required
     />
     <input
         type="number"
@@ -40,6 +42,7 @@
         step="any"
         placeholder="Latitud"
         value={form?.latitud ?? data.terminal.latitud}
+        required
     />
     <input
         type="number"
@@ -49,6 +52,7 @@
         step="any"
         placeholder="Longitud"
         value={form?.longitud ?? data.terminal.longitud}
+        required
     />
     <input type="hidden" value={data.terminal.id} name="id" />
     <input type="submit" value="Actualizar" />

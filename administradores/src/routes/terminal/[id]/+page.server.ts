@@ -86,7 +86,7 @@ export const actions = {
             return fail(400, form);
         };
         const id_ciudad = parseInt(f_id_ciudad);
-        if (isNaN(id_ciudad)) {
+        if (isNaN(id_ciudad) || id_ciudad <= 0) {
             form.error = "Seleccione una ciudad válida";
             return fail(400, form);
         };
