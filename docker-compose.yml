@@ -28,6 +28,16 @@ services:
     image: migrate/migrate:v4.16.2
     volumes:
       - ./backend/migrations:/migrations
+  administradores:
+    build:
+      context: ./administradores
+    env_file:
+      - .env
+    ports:
+      - 7000:5173
+    volumes:
+      - ./administradores:/app
+    command: [ "npm", "run", "dev", "--", "--host" ]
 
 volumes:
   postgres-data:
