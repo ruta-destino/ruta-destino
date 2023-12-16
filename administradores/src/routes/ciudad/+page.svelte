@@ -15,7 +15,7 @@
 
 <p>{form?.error || ""}</p>
 <form method="post" action="?/insert">
-    <select name="id_provincia">
+    <select name="id_provincia" required>
         <option value="">---</option>
         {#each data.provincias as provincia (provincia.id)}
             {#if form?.id_provincia === String(provincia.id)}
@@ -32,6 +32,7 @@
         placeholder="Nombre"
         name="nombre"
         value={form?.nombre || ""}
+        required
     />
     <input type="submit" value="Insertar" />
 </form>

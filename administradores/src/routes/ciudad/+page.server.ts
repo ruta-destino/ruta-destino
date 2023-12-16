@@ -43,7 +43,7 @@ export const actions = {
             return fail(400, form);
         };
         const id_provincia = parseInt(f_id_provincia);
-        if (isNaN(id_provincia)) {
+        if (isNaN(id_provincia) || id_provincia <= 0) {
             form.error = "Seleccione una provincia válida";
             return fail(400, form);
         };

@@ -8,7 +8,7 @@
 <a href="/ciudad">Ver ciudades</a>
 <p>{form?.error || ""}</p>
 <form method="post" action="?/update">
-    <select name="id_provincia">
+    <select name="id_provincia" required>
         <option value="">---</option>
         {#each data.provincias as provincia (provincia.id)}
             {#if form?.id_provincia === String(provincia.id)}
@@ -29,6 +29,7 @@
         placeholder="Nombre"
         name="nombre"
         value={form?.nombre ?? data.ciudad.nombre}
+        required
     />
     <input type="hidden" name="id" value={data.ciudad.id} />
     <input type="submit" value="Actualizar" />
