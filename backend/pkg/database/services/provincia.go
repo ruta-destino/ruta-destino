@@ -1,9 +1,12 @@
 package services
 
 import (
+	"errors"
+	"ruta-destino/pkg/database"
 	"ruta-destino/pkg/database/models"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type Provincia struct {
@@ -50,7 +53,10 @@ func (s *Provincia) Insert(provincia *models.Provincia) error {
 	`, provincia.Nombre, provincia.IdRegion)
 	err := result.Scan(&provincia.Id)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
@@ -62,7 +68,10 @@ func (s *Provincia) Update(idProvincia uint, provincia *models.Provincia) error 
 		WHERE id = $3
 	`, provincia.Nombre, provincia.IdRegion, idProvincia)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
@@ -73,7 +82,10 @@ func (s *Provincia) Delete(idProvincia uint) error {
 		WHERE id = $1
 	`, idProvincia)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
