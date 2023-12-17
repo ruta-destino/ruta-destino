@@ -1,9 +1,12 @@
 package services
 
 import (
+	"errors"
+	"ruta-destino/pkg/database"
 	"ruta-destino/pkg/database/models"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type Terminal struct {
@@ -49,7 +52,10 @@ func (s *Terminal) Insert(terminal *models.Terminal) error {
 	`, terminal.Nombre, terminal.Longitud, terminal.Latitud, terminal.Direccion, terminal.IdCiudad)
 	err := result.Scan(&terminal.Id)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
@@ -61,7 +67,10 @@ func (s *Terminal) Update(idTerminal uint, terminal *models.Terminal) error {
 		WHERE id = $6
 	`, terminal.Nombre, terminal.Longitud, terminal.Latitud, terminal.Direccion, terminal.IdCiudad, idTerminal)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
@@ -72,7 +81,10 @@ func (s *Terminal) Delete(idTerminal uint) error {
 		WHERE id = $1
 	`, idTerminal)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
