@@ -30,8 +30,14 @@ export const actions = {
         };
 
         const empresa: Empresa = await req.json();
-        cookies.set("empresa_id", String(empresa.id), { path: "/" });
-        cookies.set("empresa_nombre", String(empresa.nombre), { path: "/" });
+        cookies.set("empresa_id", String(empresa.id), {
+            path: "/",
+            maxAge: 86400
+        });
+        cookies.set("empresa_nombre", String(empresa.nombre), {
+            path: "/",
+            maxAge: 86400
+        });
 
         throw redirect(302, "/");
     }
