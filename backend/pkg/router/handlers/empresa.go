@@ -169,6 +169,22 @@ func (h *Empresa) UnlinkTerminal(c *fiber.Ctx) error {
 			"error": "Invalid id, not a number",
 		})
 	}
+
+	recorridoService := services.NewRecorridoService(h.Service.Db)
+	recorridos, err := recorridoService.List(uint(id))
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't unlink from terminal",
+		})
+	}
+	for _, r := range recorridos {
+		if serializer.Id == r.IdTerminalDestino || serializer.Id == r.IdTerminalOrigen {
+			return c.Status(400).JSON(fiber.Map{
+				"error": "Hay recorridos que usan ese terminal",
+			})
+		}
+	}
+
 	err = h.Service.UnlinkTerminal(uint(id), serializer.Id)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

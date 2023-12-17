@@ -51,6 +51,42 @@ func (h *Recorrido) Insert(c *fiber.Ctx) error {
 		})
 	}
 	model := models.Recorrido(serializer)
+
+	// TODO: Esto lo hago por faltas de tiempo.
+	// Comprobar que los terminales estén vinculados con la empresa, sino
+	// devolver un error. Esto debería trabajar desde base de datos porque aquí
+	// puede haber cambios entre la comprobación y agregar el recorrido, lo
+	// correcto es usar una transacción en este caso.
+	empresaService := services.NewEmpresaService(h.Service.Db)
+	terminales, err := empresaService.ListTerminales(uint(idEmpresa))
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't insert `recorrido`",
+		})
+	}
+	origen := false
+	for _, t := range terminales {
+		if model.IdTerminalOrigen == t.Id {
+			origen = true
+		}
+	}
+	if !origen {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "La empresa no trabaja con el terminal de origen",
+		})
+	}
+	destino := false
+	for _, t := range terminales {
+		if model.IdTerminalDestino == t.Id {
+			destino = true
+		}
+	}
+	if !destino {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "La empresa no trabaja con el terminal de destino",
+		})
+	}
+
 	err = h.Service.Insert(uint(idEmpresa), &model)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -110,6 +146,42 @@ func (h *Recorrido) Update(c *fiber.Ctx) error {
 		})
 	}
 	model := models.Recorrido(serializer)
+
+	// TODO: Esto lo hago por faltas de tiempo.
+	// Comprobar que los terminales estén vinculados con la empresa, sino
+	// devolver un error. Esto debería trabajar desde base de datos porque aquí
+	// puede haber cambios entre la comprobación y agregar el recorrido, lo
+	// correcto es usar una transacción en este caso.
+	empresaService := services.NewEmpresaService(h.Service.Db)
+	terminales, err := empresaService.ListTerminales(uint(idEmpresa))
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't insert `recorrido`",
+		})
+	}
+	origen := false
+	for _, t := range terminales {
+		if model.IdTerminalOrigen == t.Id {
+			origen = true
+		}
+	}
+	if !origen {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "La empresa no trabaja con el terminal de origen",
+		})
+	}
+	destino := false
+	for _, t := range terminales {
+		if model.IdTerminalDestino == t.Id {
+			destino = true
+		}
+	}
+	if !destino {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "La empresa no trabaja con el terminal de destino",
+		})
+	}
+
 	err = h.Service.Update(uint(idEmpresa), uint(id), &model)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{

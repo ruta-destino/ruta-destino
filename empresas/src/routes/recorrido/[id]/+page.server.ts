@@ -8,7 +8,7 @@ export const load = async ({ cookies, params }) => {
     if (!id) {
         throw redirect(302, "/login");
     };
-    let req = await fetch(`${API_URL}/terminal`);
+    let req = await fetch(`${API_URL}/empresa/${id}/terminal`);
     if (!req.ok) {
         throw error(404, "Not Found");
     };
