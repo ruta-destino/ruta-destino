@@ -82,6 +82,7 @@
             <th>Hora</th>
             <th>Minuto</th>
             <th>Días</th>
+            <th>Eliminar</th>
         </thead>
         <tbody>
             {#each data.recorridos as recorrido (recorrido.id)}
@@ -97,6 +98,16 @@
                                 {dia.nombre}
                             {/if}
                         {/each}
+                    </td>
+                    <td>
+                        <form action="?/delete" method="post">
+                            <input
+                                type="hidden"
+                                value={recorrido.id}
+                                name="id"
+                            />
+                            <input type="submit" value="X" />
+                        </form>
                     </td>
                 </tr>
             {/each}

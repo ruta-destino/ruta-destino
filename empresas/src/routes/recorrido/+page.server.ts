@@ -129,5 +129,23 @@ export const actions = {
             form.error = res["error"];
             return fail(400, form);
         };
+    },
+    delete: async ({ cookies, request }) => {
+        const id = cookies.get("empresa_id");
+        if (!id) {
+            throw redirect(302, "/login");
+        };
+        const data = await request.formData();
+        const id_recorrido = data.get("id");
+
+        const req = await fetch(`${API_URL}/empresa/${id}/recorrido/${id_recorrido}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        });
+        if (!req.ok) {
+            const res = await req.json();
+            form.error = res["error"];
+            return fail(400, form);
+        }
     }
 }
