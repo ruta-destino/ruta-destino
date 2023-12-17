@@ -1,9 +1,12 @@
 package services
 
 import (
+	"errors"
+	"ruta-destino/pkg/database"
 	"ruta-destino/pkg/database/models"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type Recorrido struct {
@@ -62,7 +65,10 @@ func (s *Recorrido) Insert(idEmpresa uint, recorrido *models.Recorrido) error {
 	`, recorrido.Dias, recorrido.Hora, recorrido.Minuto, idEmpresa, recorrido.IdTerminalOrigen, recorrido.IdTerminalDestino)
 	err := result.Scan(&recorrido.Id)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
@@ -74,7 +80,10 @@ func (s *Recorrido) Update(idEmpresa, idRecorrido uint, recorrido *models.Recorr
 		WHERE id_empresa = $6 AND id = $7
 	`, recorrido.Dias, recorrido.Hora, recorrido.Minuto, recorrido.IdTerminalOrigen, recorrido.IdTerminalDestino, idEmpresa, idRecorrido)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
@@ -85,7 +94,10 @@ func (s *Recorrido) Delete(idEmpresa, idRecorrido uint) error {
 		WHERE id_empresa = $1 AND id = $2
 	`, idEmpresa, idRecorrido)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
