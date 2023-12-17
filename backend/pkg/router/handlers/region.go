@@ -17,7 +17,7 @@ func (h *Region) List(c *fiber.Ctx) error {
 	regiones, err := h.Service.List()
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't get region entries from db",
+			"error": "No fue posible obtener las regiones",
 		})
 	}
 	serializer := []serializers.Region{}
@@ -33,13 +33,13 @@ func (h *Region) Get(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Invalid id, not a number",
+			"error": "Id de región es un entero positivo",
 		})
 	}
 	model, err := h.Service.Get(uint(id))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't get region entry",
+			"error": "No fue posible obtener la region",
 		})
 	}
 	serializer := serializers.Region(*model)
@@ -51,14 +51,14 @@ func (h *Region) Insert(c *fiber.Ctx) error {
 	err := c.BodyParser(&serializer)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't parse request body",
+			"error": "No fue posible procesar el cuerpo de petición",
 		})
 	}
 	model := models.Region(serializer)
 	err = h.Service.Insert(&model)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't insert `region`",
+			"error": err.Error(),
 		})
 	}
 	serializer.Id = model.Id
@@ -70,21 +70,21 @@ func (h *Region) Update(c *fiber.Ctx) error {
 	err := c.BodyParser(&serializer)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't parse request body",
+			"error": "No fue posible procesar el cuerpo de petición",
 		})
 	}
 	idParam := c.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Invalid id, not a number",
+			"error": "Id de región es un entero positivo",
 		})
 	}
 	model := models.Region(serializer)
 	err = h.Service.Update(uint(id), &model)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't update region entry",
+			"error": err.Error(),
 		})
 	}
 	serializer.Id = uint(id)
@@ -96,13 +96,13 @@ func (h *Region) Delete(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Invalid id, not a number",
+			"error": "Id de región es un entero positivo",
 		})
 	}
 	err = h.Service.Delete(uint(id))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't delete region entry",
+			"error": err.Error(),
 		})
 	}
 	return c.Status(204).JSON(fiber.Map{})
