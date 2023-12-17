@@ -1,9 +1,12 @@
 package services
 
 import (
+	"errors"
+	"ruta-destino/pkg/database"
 	"ruta-destino/pkg/database/models"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 type Empresa struct {
@@ -47,7 +50,10 @@ func (s *Empresa) Insert(empresa *models.Empresa) error {
 	`, empresa.Nombre)
 	err := result.Scan(&empresa.Id)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
@@ -59,7 +65,10 @@ func (s *Empresa) Update(idEmpresa uint, empresa *models.Empresa) error {
 		WHERE id = $2
 	`, empresa.Nombre, idEmpresa)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
@@ -70,7 +79,10 @@ func (s *Empresa) Delete(idEmpresa uint) error {
 		WHERE id = $1
 	`, idEmpresa)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
@@ -96,7 +108,10 @@ func (s *Empresa) LinkTerminal(idEmpresa, idTerminal uint) error {
 		VALUES ($1, $2)
 	`, idEmpresa, idTerminal)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }
@@ -107,7 +122,10 @@ func (s *Empresa) UnlinkTerminal(idEmpresa, idTerminal uint) error {
 		WHERE id_empresa = $1 AND id_terminal = $2
 	`, idEmpresa, idTerminal)
 	if err != nil {
-		return err
+		if postgresError, ok := err.(*pq.Error); ok {
+			return database.ProcessPostgresError(postgresError)
+		}
+		return errors.New("error desconocido de base de datos")
 	}
 	return nil
 }

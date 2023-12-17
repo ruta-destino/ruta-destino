@@ -17,7 +17,7 @@ func (h *Empresa) List(c *fiber.Ctx) error {
 	empresas, err := h.Service.List()
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't get empresa entries from db",
+			"error": "No fue posible obtener las empresas",
 		})
 	}
 	serializer := []serializers.Empresa{}
@@ -33,13 +33,13 @@ func (h *Empresa) Get(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Invalid id, not a number",
+			"error": "Id de empresa es un entero positivo",
 		})
 	}
 	empresa, err := h.Service.Get(uint(id))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't get empresa entry",
+			"error": "No fue posible obtener la empresa",
 		})
 	}
 	serializer := serializers.Empresa(*empresa)
@@ -51,14 +51,14 @@ func (h *Empresa) Insert(c *fiber.Ctx) error {
 	err := c.BodyParser(&serializer)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't parse request body",
+			"error": "No fue posible procesar el cuerpo de petición",
 		})
 	}
 	model := models.Empresa(serializer)
 	err = h.Service.Insert(&model)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't insert `empresa`",
+			"error": err.Error(),
 		})
 	}
 	serializer.Id = model.Id
@@ -70,21 +70,21 @@ func (h *Empresa) Update(c *fiber.Ctx) error {
 	err := c.BodyParser(&serializer)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't parse request body",
+			"error": "No fue posible procesar el cuerpo de petición",
 		})
 	}
 	idParam := c.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Invalid id, not a number",
+			"error": "Id de empresa es un entero positivo",
 		})
 	}
 	model := models.Empresa(serializer)
 	err = h.Service.Update(uint(id), &model)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't update empresa entry",
+			"error": err.Error(),
 		})
 	}
 	serializer.Id = uint(id)
@@ -96,13 +96,13 @@ func (h *Empresa) Delete(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Invalid id, not a number",
+			"error": "Id de empresa es un entero positivo",
 		})
 	}
 	err = h.Service.Delete(uint(id))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't delete empresa entry",
+			"error": err.Error(),
 		})
 	}
 	return c.Status(204).JSON(fiber.Map{})
@@ -113,13 +113,13 @@ func (h *Empresa) ListTerminales(c *fiber.Ctx) error {
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Invalid id, not a number",
+			"error": "Id de empresa es un entero positivo",
 		})
 	}
 	terminales, err := h.Service.ListTerminales(uint(id))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't get terminal entries from db",
+			"error": "No fue posible obtener los terminales",
 		})
 	}
 	serializer := []serializers.Terminal{}
@@ -135,20 +135,20 @@ func (h *Empresa) LinkTerminal(c *fiber.Ctx) error {
 	err := c.BodyParser(&serializer)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't parse request body",
+			"error": "No fue posible procesar el cuerpo de petición",
 		})
 	}
 	idParam := c.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Invalid id, not a number",
+			"error": "Id de empresa es un entero positivo",
 		})
 	}
 	err = h.Service.LinkTerminal(uint(id), serializer.Id)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't link to terminal",
+			"error": err.Error(),
 		})
 	}
 	return c.JSON(fiber.Map{})
@@ -159,14 +159,14 @@ func (h *Empresa) UnlinkTerminal(c *fiber.Ctx) error {
 	err := c.BodyParser(&serializer)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't parse request body",
+			"error": "No fue posible procesar el cuerpo de petición",
 		})
 	}
 	idParam := c.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 0)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Invalid id, not a number",
+			"error": "Id de empresa es un entero positivo",
 		})
 	}
 
@@ -174,7 +174,7 @@ func (h *Empresa) UnlinkTerminal(c *fiber.Ctx) error {
 	recorridos, err := recorridoService.List(uint(id))
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't unlink from terminal",
+			"error": "No fue posible obtener los recorridos",
 		})
 	}
 	for _, r := range recorridos {
@@ -188,7 +188,7 @@ func (h *Empresa) UnlinkTerminal(c *fiber.Ctx) error {
 	err = h.Service.UnlinkTerminal(uint(id), serializer.Id)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error": "Couldn't unlink from terminal",
+			"error": err.Error(),
 		})
 	}
 	return c.Status(204).JSON(fiber.Map{})
