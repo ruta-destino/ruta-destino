@@ -119,6 +119,15 @@ export const actions = {
             return fail(400, form);
         };
 
-        return fail(400, form);
+        const req = await fetch(`${API_URL}/empresa/${id}/recorrido`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id_terminal_origen, id_terminal_destino, hora, minuto, dias })
+        });
+        if (!req.ok) {
+            const res = await req.json();
+            form.error = res["error"];
+            return fail(400, form);
+        };
     }
 }
