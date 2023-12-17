@@ -3,6 +3,16 @@
 
     export let data: PageData;
     export let form;
+
+    const dias = [
+        { numero: "1", nombre: "Lunes", id: "lunes" },
+        { numero: "2", nombre: "Martes", id: "martes" },
+        { numero: "3", nombre: "Miércoles", id: "miercoles" },
+        { numero: "4", nombre: "Jueves", id: "jueves" },
+        { numero: "5", nombre: "Viernes", id: "viernes" },
+        { numero: "6", nombre: "Sábado", id: "sabado" },
+        { numero: "0", nombre: "Domingo", id: "domingo" },
+    ];
 </script>
 
 <h1>Recorrido</h1>
@@ -46,27 +56,21 @@
         placeholder="Minuto"
         value={form?.minuto ?? ""}
     />
-    <br />
-    <label for="lunes">Lunes</label>
-    <input type="checkbox" name="dia" id="lunes" value="1" />
-    <br />
-    <label for="lunes">Martes</label>
-    <input type="checkbox" name="dia" id="martes" value="2" />
-    <br />
-    <label for="lunes">Miércoles</label>
-    <input type="checkbox" name="dia" id="miercoles" value="3" />
-    <br />
-    <label for="lunes">Jueves</label>
-    <input type="checkbox" name="dia" id="jueves" value="4" />
-    <br />
-    <label for="lunes">Viernes</label>
-    <input type="checkbox" name="dia" id="viernes" value="5" />
-    <br />
-    <label for="lunes">Sábado</label>
-    <input type="checkbox" name="dia" id="sabado" value="6" />
-    <br />
-    <label for="lunes">Domingo</label>
-    <input type="checkbox" name="dia" id="domingo" value="0" />
+    {#each dias as dia}
+        <br />
+        <label for={dia.id}>{dia.nombre}</label>
+        {#if form?.[dia.numero]}
+            <input
+                type="checkbox"
+                checked
+                id={dia.id}
+                value={dia.numero}
+                name="dia"
+            />
+        {:else}
+            <input type="checkbox" id={dia.id} value={dia.numero} name="dia" />
+        {/if}
+    {/each}
     <input type="submit" value="Insertar" />
 </form>
 

@@ -21,14 +21,7 @@ export const load = async ({ cookies }) => {
     return { terminales, recorridos };
 }
 
-type FormKey =
-    "error" | "id_terminal_origen" | "id_terminal_destino" | "hora" | "minuto" |
-    "lunes" | "martes" | "miercoles" | "jueves" | "viernes" | "sabado" | "domingo";
-const form: { [key in FormKey]: FormDataEntryValue | null } = {
-    error: null, id_terminal_origen: null, id_terminal_destino: null, hora: null,
-    minuto: null, lunes: null, martes: null, miercoles: null, jueves: null, viernes: null,
-    sabado: null, domingo: null
-};
+const form: { [key: string]: FormDataEntryValue | null } = {};
 
 export const actions = {
     insert: async ({ request, cookies }) => {
@@ -41,11 +34,37 @@ export const actions = {
         const f_id_terminal_destino = data.get("id_terminal_destino");
         const f_hora = data.get("hora");
         const f_minuto = data.get("minuto");
+        const f_dias = data.getAll("dia");
 
         form.id_terminal_origen = f_id_terminal_origen;
         form.id_terminal_destino = f_id_terminal_destino;
         form.hora = f_hora;
         form.minuto = f_minuto;
+
+        // Apagar todos los checkbox
+        for (let i = 0; i < 7; i++) {
+            const dia = String(i);
+            form[dia] = null;
+        }
+
+        // Encender los checkbox que se enviaron y crear máscara
+        const mascara = [..."0000000"];
+        for (let f_dia of f_dias) {
+            if (typeof f_dia !== "string") {
+                continue;
+            };
+            const dia = parseInt(f_dia);
+            if (isNaN(dia) || dia < 0 || dia > 6) {
+                continue;
+            }
+            mascara[dia] = "1";
+            form[String(dia)] = String(dia);
+        }
+        const dias = mascara.join("");
+        if (dias.length !== 7) {
+            form.error = "Días inválidos";
+            return fail(400, form);
+        };
 
         if (typeof f_id_terminal_origen !== "string" || f_id_terminal_origen === "") {
             form.error = "Ingrese un terminal de origen";
@@ -99,5 +118,7 @@ export const actions = {
             form.error = "Ingrese un minuto entre 0 y 59";
             return fail(400, form);
         };
+
+        return fail(400, form);
     }
 }
