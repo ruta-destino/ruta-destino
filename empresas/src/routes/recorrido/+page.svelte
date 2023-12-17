@@ -75,7 +75,26 @@
 </form>
 
 {#if data.recorridos.length > 0}
-    <p>Aquí van los recorridos</p>
+    <table border="1">
+        <thead>
+            <th>Terminal Origen</th>
+            <th>Terminal Destino</th>
+            <th>Hora</th>
+            <th>Minuto</th>
+            <th>Días</th>
+        </thead>
+        <tbody>
+            {#each data.recorridos as recorrido (recorrido.id)}
+                <tr>
+                    <td>{recorrido.id_terminal_origen}</td>
+                    <td>{recorrido.id_terminal_destino}</td>
+                    <td>{recorrido.hora}</td>
+                    <td>{recorrido.minuto}</td>
+                    <td>{recorrido.dias}</td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
 {:else}
     <p>No hay recorridos</p>
 {/if}

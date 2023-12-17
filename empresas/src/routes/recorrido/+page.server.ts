@@ -1,5 +1,5 @@
 import { env } from "$env/dynamic/private";
-import type { Terminal } from "$lib/server/models";
+import type { Terminal, Recorrido } from "$lib/server/models";
 import { error, fail, redirect } from "@sveltejs/kit";
 const API_URL = env.API_URL;
 
@@ -17,7 +17,7 @@ export const load = async ({ cookies }) => {
     if (!req.ok) {
         throw error(404, "Not Found");
     };
-    const recorridos = await req.json();
+    const recorridos: Recorrido[] = await req.json();
     return { terminales, recorridos };
 }
 
