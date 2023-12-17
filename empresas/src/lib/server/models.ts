@@ -17,6 +17,8 @@ export type Recorrido = {
     id: number;
     id_terminal_origen: number;
     id_terminal_destino: number;
+    nombre_terminal_origen: string;
+    nombre_terminal_destino: string;
     hora: number;
     minuto: number;
     dias: string;

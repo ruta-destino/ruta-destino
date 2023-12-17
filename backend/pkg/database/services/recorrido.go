@@ -17,9 +17,16 @@ func NewRecorridoService(db *sqlx.DB) *Recorrido {
 func (s *Recorrido) List(idEmpresa uint) ([]models.Recorrido, error) {
 	recorridos := []models.Recorrido{}
 	err := s.Db.Select(&recorridos, `
-		SELECT *
+		SELECT
+			recorrido.*,
+			origen.nombre AS nombre_terminal_origen,
+			destino.nombre AS nombre_terminal_destino
 		FROM recorrido
-		WHERE id_empresa = $1
+		INNER JOIN terminal origen
+		ON recorrido.id_terminal_origen = origen.id
+		INNER JOIN terminal destino
+		ON recorrido.id_terminal_destino = destino.id
+		WHERE recorrido.id_empresa = $1
 	`, idEmpresa)
 	if err != nil {
 		return nil, err
