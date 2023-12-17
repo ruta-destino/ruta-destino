@@ -5,13 +5,13 @@
     export let form;
 
     const dias = [
-        { numero: "1", nombre: "Lunes", id: "lunes" },
-        { numero: "2", nombre: "Martes", id: "martes" },
-        { numero: "3", nombre: "Miércoles", id: "miercoles" },
-        { numero: "4", nombre: "Jueves", id: "jueves" },
-        { numero: "5", nombre: "Viernes", id: "viernes" },
-        { numero: "6", nombre: "Sábado", id: "sabado" },
-        { numero: "0", nombre: "Domingo", id: "domingo" },
+        { numero: 1, nombre: "Lunes", id: "lunes" },
+        { numero: 2, nombre: "Martes", id: "martes" },
+        { numero: 3, nombre: "Miércoles", id: "miercoles" },
+        { numero: 4, nombre: "Jueves", id: "jueves" },
+        { numero: 5, nombre: "Viernes", id: "viernes" },
+        { numero: 6, nombre: "Sábado", id: "sabado" },
+        { numero: 0, nombre: "Domingo", id: "domingo" },
     ];
 </script>
 
@@ -90,7 +90,14 @@
                     <td>{recorrido.nombre_terminal_destino}</td>
                     <td>{recorrido.hora}</td>
                     <td>{recorrido.minuto}</td>
-                    <td>{recorrido.dias}</td>
+                    <td>
+                        {#each dias as dia, i}
+                            {#if recorrido.dias[dia.numero] === "1"}
+                                {#if i !== 0},{/if}
+                                {dia.nombre}
+                            {/if}
+                        {/each}
+                    </td>
                 </tr>
             {/each}
         </tbody>
