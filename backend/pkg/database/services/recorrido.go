@@ -34,6 +34,26 @@ func (s *Recorrido) List(idEmpresa uint) ([]models.Recorrido, error) {
 	return recorridos, nil
 }
 
+func (s *Recorrido) Get(idEmpresa, idRecorrido uint) (*models.Recorrido, error) {
+	recorrido := models.Recorrido{}
+	err := s.Db.Get(&recorrido, `
+		SELECT
+			recorrido.*,
+			origen.nombre AS nombre_terminal_origen,
+			destino.nombre AS nombre_terminal_destino
+		FROM recorrido
+		INNER JOIN terminal origen
+		ON recorrido.id_terminal_origen = origen.id
+		INNER JOIN terminal destino
+		ON recorrido.id_terminal_destino = destino.id
+		WHERE recorrido.id_empresa = $1 AND recorrido.id = $2
+	`, idEmpresa, idRecorrido)
+	if err != nil {
+		return nil, err
+	}
+	return &recorrido, nil
+}
+
 func (s *Recorrido) Insert(idEmpresa uint, recorrido *models.Recorrido) error {
 	result := s.Db.QueryRow(`
 		INSERT INTO recorrido (dias, hora, minuto, id_empresa, id_terminal_origen, id_terminal_destino)

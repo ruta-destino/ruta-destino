@@ -62,6 +62,31 @@ func (h *Recorrido) Insert(c *fiber.Ctx) error {
 	return c.JSON(serializer)
 }
 
+func (h *Recorrido) Get(c *fiber.Ctx) error {
+	idParam := c.Params("id_empresa")
+	idEmpresa, err := strconv.ParseUint(idParam, 10, 0)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid id, not a number",
+		})
+	}
+	idParam = c.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 0)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Invalid id, not a number",
+		})
+	}
+	model, err := h.Service.Get(uint(idEmpresa), uint(id))
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error": "Couldn't get recorrido entry",
+		})
+	}
+	serializer := serializers.Recorrido(*model)
+	return c.JSON(serializer)
+}
+
 func (h *Recorrido) Update(c *fiber.Ctx) error {
 	serializer := serializers.Recorrido{}
 	err := c.BodyParser(&serializer)

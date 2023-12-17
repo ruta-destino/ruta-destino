@@ -15,6 +15,7 @@ func SetupRecorridoRoutes(router fiber.Router) {
 	group := router.Group("/empresa/:id_empresa/recorrido")
 	group.Get("/", recorrido.List)
 	group.Post("/", recorrido.Insert)
+	group.Get("/:id", recorrido.Get)
 	group.Post("/:id", recorrido.Update)
 	group.Delete("/:id", recorrido.Delete)
 }
