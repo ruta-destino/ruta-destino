@@ -16,12 +16,15 @@
 </script>
 
 <h1>Recorrido</h1>
+<a href="/recorrido">Ver recorridos</a>
 <p>{form?.error ?? ""}</p>
-<form action="?/insert" method="post">
+<form action="?/update" method="post">
     <select name="id_terminal_origen" required>
         <option value="">---</option>
         {#each data.terminales as terminal (terminal.id)}
             {#if form?.id_terminal_origen === String(terminal.id)}
+                <option value={terminal.id} selected>{terminal.nombre}</option>
+            {:else if form === null && data.recorrido.id_terminal_origen === terminal.id}
                 <option value={terminal.id} selected>{terminal.nombre}</option>
             {:else}
                 <option value={terminal.id}>{terminal.nombre}</option>
@@ -32,6 +35,8 @@
         <option value="">---</option>
         {#each data.terminales as terminal (terminal.id)}
             {#if form?.id_terminal_destino === String(terminal.id)}
+                <option value={terminal.id} selected>{terminal.nombre}</option>
+            {:else if form === null && data.recorrido.id_terminal_destino === terminal.id}
                 <option value={terminal.id} selected>{terminal.nombre}</option>
             {:else}
                 <option value={terminal.id}>{terminal.nombre}</option>
@@ -45,7 +50,7 @@
         min="0"
         max="23"
         placeholder="Hora"
-        value={form?.hora ?? ""}
+        value={form?.hora ?? data.recorrido.hora}
     />
     <input
         type="number"
@@ -54,7 +59,7 @@
         min="0"
         max="59"
         placeholder="Minuto"
-        value={form?.minuto ?? ""}
+        value={form?.minuto ?? data.recorrido.minuto}
     />
     {#each dias as dia}
         <br />
@@ -67,56 +72,17 @@
                 value={dia.numero}
                 name="dia"
             />
+        {:else if form === null && data.recorrido[dia.numero] === "1"}
+            <input
+                type="checkbox"
+                checked
+                id={dia.id}
+                value={dia.numero}
+                name="dia"
+            />
         {:else}
             <input type="checkbox" id={dia.id} value={dia.numero} name="dia" />
         {/if}
     {/each}
-    <input type="submit" value="Insertar" />
+    <input type="submit" value="Actualizar" />
 </form>
-
-{#if data.recorridos.length > 0}
-    <table border="1">
-        <thead>
-            <th>Terminal Origen</th>
-            <th>Terminal Destino</th>
-            <th>Hora</th>
-            <th>Minuto</th>
-            <th>Días</th>
-            <th>Actualizar</th>
-            <th>Eliminar</th>
-        </thead>
-        <tbody>
-            {#each data.recorridos as recorrido (recorrido.id)}
-                <tr>
-                    <td>{recorrido.nombre_terminal_origen}</td>
-                    <td>{recorrido.nombre_terminal_destino}</td>
-                    <td>{recorrido.hora}</td>
-                    <td>{recorrido.minuto}</td>
-                    <td>
-                        {#each dias as dia, i}
-                            {#if recorrido.dias[dia.numero] === "1"}
-                                {#if i !== 0},{/if}
-                                {dia.nombre}
-                            {/if}
-                        {/each}
-                    </td>
-                    <td>
-                        <a href={`/recorrido/${recorrido.id}`}>⟳</a>
-                    </td>
-                    <td>
-                        <form action="?/delete" method="post">
-                            <input
-                                type="hidden"
-                                value={recorrido.id}
-                                name="id"
-                            />
-                            <input type="submit" value="X" />
-                        </form>
-                    </td>
-                </tr>
-            {/each}
-        </tbody>
-    </table>
-{:else}
-    <p>No hay recorridos</p>
-{/if}
