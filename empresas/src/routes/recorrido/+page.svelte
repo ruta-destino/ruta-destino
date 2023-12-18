@@ -93,10 +93,9 @@
                     <td>{recorrido.hora}</td>
                     <td>{recorrido.minuto}</td>
                     <td>
-                        {#each dias as dia, i}
+                        {#each dias as dia}
                             {#if recorrido.dias[dia.numero] === "1"}
-                                {#if i !== 0},{/if}
-                                {dia.nombre}
+                                {dia.nombre + " "}
                             {/if}
                         {/each}
                     </td>
