@@ -29,7 +29,7 @@ services:
       - backend
     restart: always
     environment:
-      - ORIGIN=http://localhost:7001
+      - ORIGIN=${ORIGIN_ADMINISTRADORES}
     env_file:
       - .env
     ports:
@@ -41,7 +41,7 @@ services:
       - backend
     restart: always
     environment:
-      - ORIGIN=http://localhost:7002
+      - ORIGIN=${ORIGIN_EMPRESAS}
     env_file:
       - .env
     ports:
