@@ -9,8 +9,6 @@ services:
       - db
     env_file:
       - .env
-    ports:
-      - 7000:3000
   db:
     image: postgres:16
     restart: always
@@ -33,7 +31,7 @@ services:
     env_file:
       - .env
     ports:
-      - 7001:3000
+      - ${PORT_ADMINISTRADORES}:3000
   empresas:
     build:
       context: ./empresas
@@ -45,7 +43,7 @@ services:
     env_file:
       - .env
     ports:
-      - 7002:3000
+      - ${PORT_EMPRESAS}:3000
 
 volumes:
   postgres-data:

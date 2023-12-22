@@ -7,7 +7,7 @@ services:
     env_file:
       - .env
     ports:
-      - 7000:3000
+      - ${PORT_BACKEND}:3000
     volumes:
       - ./backend:/app
     entrypoint:
@@ -32,7 +32,7 @@ services:
     env_file:
       - .env
     ports:
-      - 7001:5173
+      - ${PORT_ADMINISTRADORES}:5173
     volumes:
       - ./administradores:/app
     command: [ "npm", "run", "dev", "--", "--host" ]
@@ -42,7 +42,7 @@ services:
     env_file:
       - .env
     ports:
-      - 7002:5173
+      - ${PORT_EMPRESAS}:5173
     volumes:
       - ./empresas:/app
     command: [ "npm", "run", "dev", "--", "--host" ]
