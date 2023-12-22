@@ -1,0 +1,31 @@
+# Configuración del servidor de administradores
+server {
+    listen 80;
+    server_name administradores.${DOMAIN};
+
+    location / {
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://administradores:3000;
+    }
+}
+
+# Configuración del servidor de empresas
+server {
+    listen 80;
+    server_name empresas.${DOMAIN};
+
+    location / {
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://empresas:3000;
+    }
+}
+
+# Enviar error 404 en cualquier otra ruta no válida
+server {
+    listen 80 default_server;
+    return 404;
+}

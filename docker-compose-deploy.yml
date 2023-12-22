@@ -16,6 +16,17 @@ services:
       - .env
     volumes:
       - postgres-data:/var/lib/postgresql/data
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    depends_on:
+      - administradores
+      - empresas
+    env_file:
+      - .env
+    ports:
+      - 80:80
   migrate:
     image: migrate/migrate:v4.16.2
     volumes:
@@ -26,24 +37,16 @@ services:
     depends_on:
       - backend
     restart: always
-    environment:
-      - ORIGIN=${ORIGIN_ADMINISTRADORES}
     env_file:
       - .env
-    ports:
-      - ${PORT_ADMINISTRADORES}:3000
   empresas:
     build:
       context: ./empresas
     depends_on:
       - backend
     restart: always
-    environment:
-      - ORIGIN=${ORIGIN_EMPRESAS}
     env_file:
       - .env
-    ports:
-      - ${PORT_EMPRESAS}:3000
 
 volumes:
   postgres-data:
